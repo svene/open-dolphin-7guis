@@ -29,8 +29,6 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        stage.setTitle("7 GUIs: Counter");
-
         Pane root = setupStage();
 
         addClientSideAction();
@@ -39,7 +37,7 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(root, 300, 300);
         scene.setFill(Color.GREEN);
         stage.setScene(scene);
-        stage.setTitle(getClass().getName());
+        stage.setTitle("7 GUIs: Counter");
         stage.show();
     }
 

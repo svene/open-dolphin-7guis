@@ -32,7 +32,6 @@ public class Application extends javafx.application.Application {
 
         Pane root = setupStage();
 
-        addClientSideAction();
         initializePMs();
 
         Scene scene = new Scene(root, 600, 100);
@@ -76,14 +75,29 @@ public class Application extends javafx.application.Application {
     private void setupBinding() {
 
         PresentationModel pm = clientDolphin.getAt(PM_APP);
-//        JFXBinder.bind(ATT_CELSIUS).of(pm).to("text").of(celsiusLabel);
-        JFXBinder.bind("text").of(celsiusTextField).to(ATT_CELSIUS).of(pm);
 
-        JFXBinder.bind(ATT_FAHRENHEIT).of(pm).to("text").of(fahrenheitTextField);
+		JFXBinder.bind("text").of(celsiusTextField).to(ATT_CELSIUS).of(pm);
+		JFXBinder.bind(ATT_CELSIUS).of(pm).to("text").of(celsiusTextField);
+
+		JFXBinder.bind("text").of(fahrenheitTextField).to(ATT_FAHRENHEIT).of(pm);
+		JFXBinder.bind(ATT_FAHRENHEIT).of(pm).to("text").of(fahrenheitTextField);
+
+
+		celsiusTextField.focusedProperty().addListener((s,o,gained) -> {
+			System.out.println("celsiusTextField.focusedProperty: gained: " + gained);
+			if (gained) {
+				pm.getAt(ATT_DIRECTION).setValue(VAL_DIRECTION_CELSIUS_TO_FAHRENHEIT);
+			}
+		});
+
+		fahrenheitTextField.focusedProperty().addListener((s,o,gained) -> {
+			System.out.println("fahrenheitTextField.focusedProperty: gained: " + gained);
+			if (gained) {
+				pm.getAt(ATT_DIRECTION).setValue(VAL_DIRECTION_FAHRENHEIT_TO_CELSIUS);
+			}
+		});
+
 
     }
 
-    private void addClientSideAction() {
-//        button.setOnAction(actionEvent -> clientDolphin.send(COMMAND_INC_COUNTER));
-    }
 }

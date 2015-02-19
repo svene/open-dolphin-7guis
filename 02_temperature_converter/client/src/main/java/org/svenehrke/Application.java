@@ -2,11 +2,10 @@ package org.svenehrke;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -23,8 +22,10 @@ import static org.svenehrke.ApplicationConstants.*;
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;
 
-    private Button button;
-    private Label counterLabel;
+    private TextField celsiusTextField;
+    private TextField fahrenheitTextField;
+    private Label celsiusLabel;
+    private Label fahrenheitLabel;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -34,10 +35,10 @@ public class Application extends javafx.application.Application {
         addClientSideAction();
         initializePMs();
 
-        Scene scene = new Scene(root, 300, 300);
+        Scene scene = new Scene(root, 600, 100);
         scene.setFill(Color.GREEN);
         stage.setScene(scene);
-        stage.setTitle("7 GUIs: Counter");
+        stage.setTitle("7 GUIs: Temperature Converter");
         stage.show();
     }
 
@@ -46,14 +47,20 @@ public class Application extends javafx.application.Application {
         HBox hBox = new HBox(10);
         hBox.setPadding(new Insets(10));
         hBox.setSpacing(10);
-        button = new Button();
-        counterLabel = new Label("");
-        counterLabel.setFont(Font.font("Verdana", 20));
+		celsiusTextField = new TextField();
+
+        celsiusLabel = new Label("");
+		celsiusLabel.setFont(Font.font("Verdana", 20));
+
+        fahrenheitLabel = new Label("");
+		fahrenheitLabel.setFont(Font.font("Verdana", 20));
+
+		fahrenheitTextField = new TextField();
 
         pane.getChildren().addAll(hBox);
-		hBox.getChildren().addAll(counterLabel);
-		hBox.getChildren().addAll(button);
-        button.setText("Count");
+		hBox.getChildren().addAll(celsiusTextField, celsiusLabel, fahrenheitTextField, fahrenheitLabel);
+        celsiusLabel.setText("Celsius");
+		fahrenheitLabel.setText("Fahrenheit");
         return pane;
     }
 
@@ -69,10 +76,14 @@ public class Application extends javafx.application.Application {
     private void setupBinding() {
 
         PresentationModel pm = clientDolphin.getAt(PM_APP);
-        JFXBinder.bind(ATT_COUNTER).of(pm).to("text").of(counterLabel);
+//        JFXBinder.bind(ATT_CELSIUS).of(pm).to("text").of(celsiusLabel);
+        JFXBinder.bind("text").of(celsiusTextField).to(ATT_CELSIUS).of(pm);
+
+        JFXBinder.bind(ATT_FAHRENHEIT).of(pm).to("text").of(fahrenheitTextField);
+
     }
 
     private void addClientSideAction() {
-        button.setOnAction(actionEvent -> clientDolphin.send(COMMAND_INC_COUNTER));
+//        button.setOnAction(actionEvent -> clientDolphin.send(COMMAND_INC_COUNTER));
     }
 }

@@ -6,10 +6,10 @@ package org.svenehrke;
 public class ApplicationConstants {
 
     public static final String PM_APP = unique("APP");
-	public static final String ATT_COUNTER = "ATT_COUNTER";
+	public static final String ATT_CELSIUS = "ATT_CELSIUS";
+	public static final String ATT_FAHRENHEIT = "ATT_FAHRENHEIT";
 
 	public static final String COMMAND_INIT = unique("CMD_INIT");
-	public static final String COMMAND_INC_COUNTER = unique("COMMAND_INC_COUNTER");
 
 
     /**

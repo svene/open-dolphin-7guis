@@ -28,7 +28,6 @@ public class ApplicationAction extends DolphinServerAction{
 					return;
 				}
 				String newValue = (String) evt.getNewValue();
-				// F = C * (9/5) + 32
 				Double c = null;
 				try {
 					c = Double.valueOf(newValue);
@@ -47,7 +46,6 @@ public class ApplicationAction extends DolphinServerAction{
 					return;
 				}
 				String newValue = (String) evt.getNewValue();
-				// C = (F - 32) * (5/9)
 				Double f = null;
 				try {
 					f = Double.valueOf(newValue);

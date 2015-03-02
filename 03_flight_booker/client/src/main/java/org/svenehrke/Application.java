@@ -1,17 +1,14 @@
 package org.svenehrke;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.opendolphin.binding.JFXBinder;
 import org.opendolphin.core.PresentationModel;
 import org.opendolphin.core.client.ClientDolphin;
@@ -25,9 +22,10 @@ import java.util.List;
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;
 
-    private Button button;
-    private TextField nameTextField;
-    private Label greetingLabel;
+    private ComboBox<Pair<String, String>> flightTypeComboBox;
+    private TextField startDateTextField;
+	private TextField endDateTextField;
+	private Button bookButton;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -40,21 +38,25 @@ public class Application extends javafx.application.Application {
         VBox vBox = new VBox(10);
         vBox.setPadding(new Insets(10));
         vBox.setSpacing(10);
-        button = new Button();
-        nameTextField = new TextField();
-        greetingLabel = new Label("");
-        greetingLabel.setTextFill(Color.WHITE);
-        greetingLabel.setFont(Font.font ("Verdana", 20));
+
+		ObservableList<Pair<String, String>> flightTypes = FXCollections.observableArrayList(new Pair<>("o", "one-way-flight"), new Pair<>("r", "return flight"));
+
+		flightTypeComboBox = WidgetFactory.flightComboBox(flightTypes);
+
+        startDateTextField = new TextField();
+        endDateTextField = new TextField();
+		bookButton = new Button();
 
         pane.getChildren().addAll(vBox);
-        vBox.getChildren().addAll(nameTextField);
-        vBox.getChildren().addAll(button);
-        vBox.getChildren().addAll(greetingLabel);
-        button.setText("Greet");
+        vBox.getChildren().addAll(flightTypeComboBox);
+        vBox.getChildren().addAll(startDateTextField);
+        vBox.getChildren().addAll(endDateTextField);
+        vBox.getChildren().addAll(bookButton);
+        bookButton.setText("Book");
         return pane;
     }
 
-    private void bootstrap(final Stage stage) {
+	private void bootstrap(final Stage stage) {
 
 		Pane root = rootView();
 		addClientSideAction();
@@ -76,20 +78,13 @@ public class Application extends javafx.application.Application {
 
         PresentationModel pm = clientDolphin.getAt(PM_APP);
 
-        JFXBinder.bind(ATT_NAME).of(pm).to("text").of(nameTextField);
-        JFXBinder.bind("text").of(nameTextField).to(ATT_NAME).of(pm);
-
-        JFXBinder.bind(ATT_GREETING).of(pm).to("text").of(greetingLabel);
+        JFXBinder.bind(ATT_NAME).of(pm).to("text").of(startDateTextField);
+        JFXBinder.bind("text").of(startDateTextField).to(ATT_NAME).of(pm);
 
         clientDolphin.getAt(PM_APP).getAt(ATT_NAME).setValue("Duke");
     }
 
     private void addClientSideAction() {
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                clientDolphin.send(COMMAND_GREET);
-            }
-        });
+        bookButton.setOnAction(actionEvent -> clientDolphin.send(COMMAND_BOOK));
     }
 }

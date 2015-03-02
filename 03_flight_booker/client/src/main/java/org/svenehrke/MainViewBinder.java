@@ -1,5 +1,7 @@
 package org.svenehrke;
 
+import javafx.collections.FXCollections;
+import javafx.util.Pair;
 import org.opendolphin.binding.JFXBinder;
 import org.opendolphin.core.PresentationModel;
 import org.opendolphin.core.client.ClientDolphin;
@@ -19,6 +21,9 @@ public class MainViewBinder {
 	}
 
 	public void bind() {
+
+		mainView.getFlightTypeComboBox().getItems().addAll(FXCollections.observableArrayList(new Pair<>("o", "one-way-flight"), new Pair<>("r", "return flight")));
+
 		PresentationModel pm = clientDolphin.getAt(PM_APP);
 
 		JFXBinder.bind(ATT_NAME).of(pm).to("text").of(mainView.getStartDateTextField());

@@ -1,16 +1,15 @@
 package org.svenehrke;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 public class WidgetFactory {
-	static ComboBox<Pair<String, String>> flightComboBox(ObservableList<Pair<String, String>> items) {
+	static ComboBox<Pair<String, String>> flightComboBox() {
 		// See http://code.makery.ch/blog/javafx-8-event-handling-examples/
 
-		ComboBox<Pair<String, String>> result = new ComboBox<>(items);
+		ComboBox<Pair<String, String>> result = new ComboBox<>();
 		result.setCellFactory((cb) -> new ListCell<Pair<String, String>>() {
 			@Override
 			protected void updateItem(Pair<String, String> item, boolean empty) {

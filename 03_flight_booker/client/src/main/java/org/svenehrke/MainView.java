@@ -1,7 +1,5 @@
 package org.svenehrke;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -26,9 +24,7 @@ public class MainView {
 		vBox.setPadding(new Insets(10));
 		vBox.setSpacing(10);
 
-		ObservableList<Pair<String, String>> flightTypes = FXCollections.observableArrayList(new Pair<>("o", "one-way-flight"), new Pair<>("r", "return flight"));
-
-		flightTypeComboBox = WidgetFactory.flightComboBox(flightTypes);
+		flightTypeComboBox = WidgetFactory.flightComboBox();
 
 		startDateTextField = new TextField();
 		endDateTextField = new TextField();

@@ -34,6 +34,7 @@ public class Application extends javafx.application.Application {
     	});
 
 		Scene scene = new Scene(mainView.getRoot(), 300, 300);
+		scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("7 GUIs: Flight Booker");
 	}

@@ -6,8 +6,15 @@ package org.svenehrke;
 public class ApplicationConstants {
 
     public static final String PM_APP = unique("APP");
-    public static final String ATT_NAME = "ATT_NAME";
-    public static final String ATT_GREETING = "ATT_GREETING";
+    public static final String ATT_FLIGHT_TYPE = "ATT_FLIGHT_TYPE";
+    public static final String VAL_FT_ONE_WAY = "o";
+    public static final String VAL_FT_RETURN = "r";
+
+    public static final String ATT_RETURN_DATE_ENABLED = "ATT_RETURN_DATE_ENABLED";
+
+	public static final String ATT_START_DATE = "ATT_START_DATE";
+	public static final String ATT_INVALID_START_DATE = "ATT_INVALID_START_DATE";
+	public static final String ATT_RETURN_DATE = "ATT_RETURN_DATE";
 
 	public static final String COMMAND_INIT = unique("CMD_INIT");
 	public static final String COMMAND_BOOK = unique("CMD_BOOK");

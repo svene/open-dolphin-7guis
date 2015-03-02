@@ -14,7 +14,7 @@ public class MainView {
 
 	private ComboBox<Pair<String, String>> flightTypeComboBox;
 	private TextField startDateTextField;
-	private TextField endDateTextField;
+	private TextField returnDateTextField;
 	private Button bookButton;
 
 	public MainView() {
@@ -27,13 +27,13 @@ public class MainView {
 		flightTypeComboBox = WidgetFactory.flightComboBox();
 
 		startDateTextField = new TextField();
-		endDateTextField = new TextField();
+		returnDateTextField = new TextField();
 		bookButton = new Button();
 
 		root.getChildren().addAll(vBox);
 		vBox.getChildren().addAll(flightTypeComboBox);
 		vBox.getChildren().addAll(startDateTextField);
-		vBox.getChildren().addAll(endDateTextField);
+		vBox.getChildren().addAll(returnDateTextField);
 		vBox.getChildren().addAll(bookButton);
 		bookButton.setText("Book");
 	}
@@ -50,8 +50,8 @@ public class MainView {
 		return startDateTextField;
 	}
 
-	public TextField getEndDateTextField() {
-		return endDateTextField;
+	public TextField getReturnDateTextField() {
+		return returnDateTextField;
 	}
 
 	public Button getBookButton() {

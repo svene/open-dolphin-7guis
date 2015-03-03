@@ -49,23 +49,17 @@ public class MainViewBinder {
 			attFlightType.setValue(k);
 		});
 
-		JFXBinder.bind(ATT_RETURN_DATE_ENABLED).of(pm).using(v -> !"Y".equals(v)).to("disable").of(mainView.getReturnDateTextField());
+		JFXBinder.bind(ATT_RETURN_DATE_ENABLED).of(pm).using(value -> !(Boolean)value).to("disable").of(mainView.getReturnDateTextField());
 
 		JFXBinder.bind("text").of(mainView.getStartDateTextField()).to(ATT_START_DATE).of(pm);
 
-		// Red background on start-date when invallid:
+		// Red background on start-date when invalid:
 		attInvalidStartDate.addPropertyChangeListener(evt -> {
 			if (evt.getNewValue() instanceof Boolean) {
 				Boolean newValue = (Boolean) evt.getNewValue();
 				mainView.getStartDateTextField().pseudoClassStateChanged(ERROR_CLASS, newValue);
 			}
 		});
-
-
-//		JFXBinder.bind(ATT_FLIGHT_TYPE).of(pm).to("text").of(mainView.getStartDateTextField());
-//		JFXBinder.bind("text").of(mainView.getStartDateTextField()).to(ATT_FLIGHT_TYPE).of(pm);
-
-//		clientDolphin.getAt(PM_APP).getAt(ATT_FLIGHT_TYPE).setValue("Duke");
 
 	}
 }

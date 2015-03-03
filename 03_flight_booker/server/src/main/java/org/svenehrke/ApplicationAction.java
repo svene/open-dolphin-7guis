@@ -17,12 +17,14 @@ public class ApplicationAction extends DolphinServerAction{
 
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
 			// Create PM:
+			ServerAPI serverAPI = new ServerAPI(getServerDolphin());
 			DTO dto = new DTO(
 				new Slot(ATT_FLIGHT_TYPE, ApplicationConstants.VAL_FT_ONE_WAY),
-				new Slot(ATT_RETURN_DATE_ENABLED, "F"),
+				new Slot(ATT_RETURN_DATE_ENABLED, Boolean.FALSE),
 				new Slot(ATT_START_DATE, ""),
 				new Slot(ATT_RETURN_DATE, ""),
-				new Slot(ATT_INVALID_START_DATE, Boolean.FALSE)
+				new Slot(ATT_INVALID_START_DATE, Boolean.FALSE),
+				new Slot(ATT_INVALID_RETURN_DATE, Boolean.FALSE)
 			);
 			ServerPresentationModel pm = getServerDolphin().presentationModel(PM_APP, null, dto);
 
@@ -31,6 +33,7 @@ public class ApplicationAction extends DolphinServerAction{
 			ServerAttribute attStartDate = pm.getAt(ATT_START_DATE);
 			ServerAttribute attReturnDate = pm.getAt(ATT_RETURN_DATE);
 			ServerAttribute attInvalidStartDate = pm.getAt(ATT_INVALID_START_DATE);
+			ServerAttribute attInvalidReturnDate = pm.getAt(ATT_INVALID_RETURN_DATE);
 
 			// Handle flight type change:
 			attFlightType.addPropertyChangeListener(evt -> {
@@ -38,19 +41,24 @@ public class ApplicationAction extends DolphinServerAction{
 					return;
 				}
 				System.out.println("*** ATT_FLIGHT_TYPE: " + evt.getNewValue());
-				String enabled = VAL_FT_RETURN.equals(attFlightType.getValue()) ? "Y" : "N";
-				System.out.println("*** enabled = " + enabled);
-				attReturnDateEnabled.setValue(enabled);
+				attReturnDateEnabled.setValue(serverAPI.isReturnFlight());
 
 			});
 
 
-			// Handle from date change:
+			// Handle from-date change:
 			attStartDate.addPropertyChangeListener(evt -> {
-				String s = (String) attStartDate.getValue();
+				String s = serverAPI.getStartDate();
 				LocalDate localDate = new DateTimeService().parse(s);
 				attInvalidStartDate.setValue(localDate == null);
 			});
+
+			// Handle return-date change:
+//			attReturnDate.addPropertyChangeListener(evt -> {
+//				String s = (String) attStartDate.getValue();
+//				LocalDate localDate = new DateTimeService().parse(s);
+//				attInvalidReturnDate.setValue(localDate == null);
+//			});
 
 
 		});

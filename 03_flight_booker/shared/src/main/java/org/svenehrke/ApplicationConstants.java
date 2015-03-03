@@ -14,7 +14,9 @@ public class ApplicationConstants {
 
 	public static final String ATT_START_DATE = "ATT_START_DATE";
 	public static final String ATT_INVALID_START_DATE = "ATT_INVALID_START_DATE";
+
 	public static final String ATT_RETURN_DATE = "ATT_RETURN_DATE";
+	public static final String ATT_INVALID_RETURN_DATE = "ATT_INVALID_RETURN_DATE";
 
 	public static final String COMMAND_INIT = unique("CMD_INIT");
 	public static final String COMMAND_BOOK = unique("CMD_BOOK");

@@ -20,6 +20,9 @@ public class ServerAPI {
 
 	}
 
+	public String getFlightType() {
+		return (String) getPM().getAt(ATT_FLIGHT_TYPE).getValue();
+	}
 	public String getStartDate() {
 		return (String) getPM().getAt(ATT_START_DATE).getValue();
 	}

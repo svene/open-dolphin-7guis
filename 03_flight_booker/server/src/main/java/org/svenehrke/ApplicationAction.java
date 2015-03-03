@@ -16,6 +16,9 @@ public class ApplicationAction extends DolphinServerAction{
     public void registerIn(ActionRegistry actionRegistry) {
 
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
+
+			DateTimeService dateTimeService = new DateTimeService();
+
 			// Create PM:
 			ServerAPI serverAPI = new ServerAPI(getServerDolphin());
 			DTO dto = new DTO(
@@ -49,7 +52,7 @@ public class ApplicationAction extends DolphinServerAction{
 			// Handle from-date change:
 			attStartDate.addPropertyChangeListener(evt -> {
 				String s = serverAPI.getStartDate();
-				LocalDate localDate = new DateTimeService().parse(s);
+				LocalDate localDate = dateTimeService.parse(s);
 				attInvalidStartDate.setValue(localDate == null);
 			});
 
@@ -60,6 +63,9 @@ public class ApplicationAction extends DolphinServerAction{
 //				attInvalidReturnDate.setValue(localDate == null);
 //			});
 
+
+			// Init:
+			attStartDate.setValue(dateTimeService.format(LocalDate.now()));
 
 		});
 

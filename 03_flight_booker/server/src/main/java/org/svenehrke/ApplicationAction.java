@@ -26,8 +26,9 @@ public class ApplicationAction extends DolphinServerAction{
 				new Slot(ATT_RETURN_DATE_ENABLED, Boolean.FALSE),
 				new Slot(ATT_START_DATE, ""),
 				new Slot(ATT_RETURN_DATE, ""),
-				new Slot(ATT_INVALID_START_DATE, Boolean.FALSE),
-				new Slot(ATT_INVALID_RETURN_DATE, Boolean.FALSE)
+				new Slot(ATT_VALID_START_DATE, Boolean.FALSE),
+				new Slot(ATT_INVALID_RETURN_DATE, Boolean.FALSE),
+				new Slot(ATT_BOOK_COMMAND_ENABLED, Boolean.TRUE) // todo: remove redundancy to binding
 			);
 			ServerPresentationModel pm = getServerDolphin().presentationModel(PM_APP, null, dto);
 
@@ -35,7 +36,7 @@ public class ApplicationAction extends DolphinServerAction{
 			ServerAttribute attReturnDateEnabled = pm.getAt(ATT_RETURN_DATE_ENABLED);
 			ServerAttribute attStartDate = pm.getAt(ATT_START_DATE);
 			ServerAttribute attReturnDate = pm.getAt(ATT_RETURN_DATE);
-			ServerAttribute attInvalidStartDate = pm.getAt(ATT_INVALID_START_DATE);
+			ServerAttribute attInvalidStartDate = pm.getAt(ATT_VALID_START_DATE);
 			ServerAttribute attInvalidReturnDate = pm.getAt(ATT_INVALID_RETURN_DATE);
 
 			// Handle flight type change:
@@ -52,8 +53,7 @@ public class ApplicationAction extends DolphinServerAction{
 			// Handle from-date change:
 			attStartDate.addPropertyChangeListener(evt -> {
 				String s = serverAPI.getStartDate();
-				LocalDate localDate = dateTimeService.parse(s);
-				attInvalidStartDate.setValue(localDate == null);
+				serverAPI.setStartDateValidity(dateTimeService.isValidDate(s));
 			});
 
 			// Handle return-date change:
@@ -67,6 +67,12 @@ public class ApplicationAction extends DolphinServerAction{
 			// Init:
 			attStartDate.setValue(dateTimeService.format(LocalDate.now()));
 
+			attStartDate.addPropertyChangeListener(evt -> {
+				evaluateBookCommandEnabled(serverAPI);
+			});
+
+			evaluateBookCommandEnabled(serverAPI);
+
 		});
 
         actionRegistry.register(ApplicationConstants.COMMAND_BOOK, (command, response) -> {
@@ -74,4 +80,9 @@ public class ApplicationAction extends DolphinServerAction{
 		});
 
     }
+
+
+	private void evaluateBookCommandEnabled(ServerAPI serverAPI) {
+		serverAPI.setBookCommandEnabled(serverAPI.isStartDateValid());
+	}
 }

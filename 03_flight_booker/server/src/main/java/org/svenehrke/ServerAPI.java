@@ -32,5 +32,20 @@ public class ServerAPI {
 		return VAL_FT_RETURN.equals(attFlightType.getValue());
 	}
 
+	public void setStartDateValidity(boolean valid) {
+		getPM().getAt(ATT_VALID_START_DATE).setValue(valid);
+	}
+
+	public boolean isStartDateValid() {
+		return (boolean) getPM().getAt(ATT_VALID_START_DATE).getValue();
+	}
+
+	public void setBookCommandEnabled(boolean enabled) {
+		getPM().getAt(ATT_BOOK_COMMAND_ENABLED).setValue(enabled);
+	}
+
+	public boolean isBookCommandEnabled() {
+		return (boolean) getPM().getAt(ATT_BOOK_COMMAND_ENABLED).getValue();
+	}
 
 }

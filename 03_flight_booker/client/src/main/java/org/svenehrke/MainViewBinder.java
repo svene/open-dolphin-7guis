@@ -30,7 +30,7 @@ public class MainViewBinder {
 		PresentationModel pm = clientDolphin.getAt(PM_APP);
 		Attribute attFlightType = pm.getAt(ATT_FLIGHT_TYPE);
 		Attribute attStartDate = pm.getAt(ATT_START_DATE);
-		Attribute attInvalidStartDate = pm.getAt(ATT_INVALID_START_DATE);
+		Attribute attValidStartDate = pm.getAt(ATT_VALID_START_DATE);
 
 		ComboBox<Pair<String, String>> cb = mainView.getFlightTypeComboBox();
 		cb.getItems().addAll(FXCollections.observableArrayList(new Pair<>(ApplicationConstants.VAL_FT_ONE_WAY, "one-way-flight"), new Pair<>(ApplicationConstants.VAL_FT_RETURN, "return flight")));
@@ -50,12 +50,14 @@ public class MainViewBinder {
 		JFXBinder.bind("text").of(mainView.getStartDateTextField()).to(ATT_START_DATE).of(pm);
 
 		// Red background on start-date when invalid:
-		attInvalidStartDate.addPropertyChangeListener(evt -> {
+		attValidStartDate.addPropertyChangeListener(evt -> {
 			if (evt.getNewValue() instanceof Boolean) {
 				Boolean newValue = (Boolean) evt.getNewValue();
-				mainView.getStartDateTextField().pseudoClassStateChanged(ERROR_CLASS, newValue);
+				mainView.getStartDateTextField().pseudoClassStateChanged(ERROR_CLASS, ! newValue);
 			}
 		});
+
+		JFXBinder.bind(ATT_BOOK_COMMAND_ENABLED).of(pm).using(v -> !(Boolean)v).to("disable").of(mainView.getBookButton());
 
 	}
 

@@ -1,26 +1,43 @@
 package org.svenehrke;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.time.format.*;
+
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
+import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
+import static java.time.temporal.ChronoField.YEAR;
 
 public class DateTimeService {
 
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	DateTimeFormatter formatter = dateFormatter();
 
-	public LocalDate parse(String s) {
+	public boolean isValidDate(String dateString) {
 		try {
-			LocalDate result = LocalDate.parse(s, formatter);
-			System.out.println("*** valid date:" + s);
-			return result;
+			dateFromString(dateString);
+			return true;
 		} catch (DateTimeParseException e) {
-			System.out.println("*** invalid date:" + s);
-			return null;
+			return false;
 		}
+	}
+
+	public LocalDate dateFromString(String input) {
+		return LocalDate.parse(input, formatter);
 	}
 
 	public String format(LocalDate localDate) {
 		return formatter.format(localDate);
 	}
+
+	public static DateTimeFormatter dateFormatter() {
+		return new DateTimeFormatterBuilder()
+			.appendValue(DAY_OF_MONTH, 1, 2, SignStyle.NEVER)
+			.appendLiteral(".")
+			.appendValue(MONTH_OF_YEAR, 1, 2, SignStyle.NEVER)
+			.appendLiteral(".")
+			.appendValue(YEAR, 4)
+			.optionalStart().toFormatter()
+			.withResolverStyle(ResolverStyle.STRICT);
+	}
+
+
 }

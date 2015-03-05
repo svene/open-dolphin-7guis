@@ -10,7 +10,9 @@ public class ApplicationAction extends DolphinServerAction{
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
 
 			ServerAPI serverAPI = new ServerAPI(getServerDolphin()).initialize();
-			DomainLogic domainLogic = new DomainLogic(new DateTimeService(), () -> serverAPI.getStartDateValue());
+			DomainLogic domainLogic = DomainLogic.domainLogic()
+				.dateTimeService(new DateTimeService())
+				.startDate(serverAPI::getStartDateValue);
 
 
 			// Handle flight type change:

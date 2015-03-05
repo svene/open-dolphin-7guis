@@ -13,6 +13,11 @@ public class DomainLogic {
 		this.startDateSupplier = startDateSupplier;
 	}
 
+	public static IDateTimeServiceBuilder domainLogic() {
+		return dateTimeService -> startDateSupplier -> new DomainLogic(dateTimeService, startDateSupplier);
+	}
+	public interface IDateTimeServiceBuilder { IStartDateBuilder dateTimeService(DateTimeService dateTimeService);}
+	public interface IStartDateBuilder { DomainLogic startDate(Supplier<String> startDateSupplier);}
 
 	public boolean isStartDateValid() {
 		return dateTimeService.isValidDate(startDateSupplier.get());

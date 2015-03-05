@@ -10,9 +10,14 @@ public class ServerAPI {
 	private final ServerDolphin serverDolphin;
 	private String startDate;
 
-	public ServerAPI(ServerDolphin serverDolphin) {
+	private ServerAPI(ServerDolphin serverDolphin) {
 
 		this.serverDolphin = serverDolphin;
+	}
+
+	public static ServerAPI initializedInstance(ServerDolphin serverDolphin) {
+		ServerAPI result = new ServerAPI(serverDolphin);
+		return result.initialize();
 	}
 
 	public ServerAPI initialize() {

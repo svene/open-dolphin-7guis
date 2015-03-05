@@ -1,15 +1,7 @@
 package org.svenehrke;
 
-import org.opendolphin.core.server.DTO;
-import org.opendolphin.core.server.ServerAttribute;
-import org.opendolphin.core.server.ServerPresentationModel;
-import org.opendolphin.core.server.Slot;
 import org.opendolphin.core.server.action.DolphinServerAction;
 import org.opendolphin.core.server.comm.ActionRegistry;
-
-import java.time.LocalDate;
-
-import static org.svenehrke.ApplicationConstants.*;
 
 public class ApplicationAction extends DolphinServerAction{
 
@@ -17,43 +9,25 @@ public class ApplicationAction extends DolphinServerAction{
 
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
 
-			DateTimeService dateTimeService = new DateTimeService();
+			ServerAPI serverAPI = new ServerAPI(getServerDolphin()).initialize();
+			DomainLogic domainLogic = new DomainLogic(new DateTimeService(), () -> serverAPI.getStartDateValue());
 
-			// Create PM:
-			ServerAPI serverAPI = new ServerAPI(getServerDolphin());
-			DTO dto = new DTO(
-				new Slot(ATT_FLIGHT_TYPE, ApplicationConstants.VAL_FT_ONE_WAY),
-				new Slot(ATT_RETURN_DATE_ENABLED, Boolean.FALSE),
-				new Slot(ATT_START_DATE, ""),
-				new Slot(ATT_RETURN_DATE, ""),
-				new Slot(ATT_VALID_START_DATE, Boolean.FALSE),
-				new Slot(ATT_INVALID_RETURN_DATE, Boolean.FALSE),
-				new Slot(ATT_BOOK_COMMAND_ENABLED, Boolean.TRUE) // todo: remove redundancy to binding
-			);
-			ServerPresentationModel pm = getServerDolphin().presentationModel(PM_APP, null, dto);
-
-			ServerAttribute attFlightType = pm.getAt(ATT_FLIGHT_TYPE);
-			ServerAttribute attReturnDateEnabled = pm.getAt(ATT_RETURN_DATE_ENABLED);
-			ServerAttribute attStartDate = pm.getAt(ATT_START_DATE);
-			ServerAttribute attReturnDate = pm.getAt(ATT_RETURN_DATE);
-			ServerAttribute attInvalidStartDate = pm.getAt(ATT_VALID_START_DATE);
-			ServerAttribute attInvalidReturnDate = pm.getAt(ATT_INVALID_RETURN_DATE);
 
 			// Handle flight type change:
-			attFlightType.addPropertyChangeListener(evt -> {
-				if ( ! (evt.getNewValue() instanceof String)) {
+			serverAPI.getFlightType().addPropertyChangeListener(evt -> {
+				if (!(evt.getNewValue() instanceof String)) {
 					return;
 				}
 				System.out.println("*** ATT_FLIGHT_TYPE: " + evt.getNewValue());
-				attReturnDateEnabled.setValue(serverAPI.isReturnFlight());
+				serverAPI.getReturnTypeEnabled().setValue(serverAPI.isReturnFlight());
 
 			});
 
 
 			// Handle from-date change:
-			attStartDate.addPropertyChangeListener(evt -> {
-				String s = serverAPI.getStartDate();
-				serverAPI.setStartDateValidity(dateTimeService.isValidDate(s));
+			serverAPI.getStartDate().addPropertyChangeListener(evt -> {
+				String s = serverAPI.getStartDateValue();
+				serverAPI.setStartDateValidity(domainLogic.isStartDateValid());
 			});
 
 			// Handle return-date change:
@@ -65,9 +39,7 @@ public class ApplicationAction extends DolphinServerAction{
 
 
 			// Init:
-			attStartDate.setValue(dateTimeService.format(LocalDate.now()));
-
-			attStartDate.addPropertyChangeListener(evt -> {
+			serverAPI.getStartDate().addPropertyChangeListener(evt -> {
 				evaluateBookCommandEnabled(serverAPI);
 			});
 
@@ -83,6 +55,8 @@ public class ApplicationAction extends DolphinServerAction{
 
 
 	private void evaluateBookCommandEnabled(ServerAPI serverAPI) {
-		serverAPI.setBookCommandEnabled(serverAPI.isStartDateValid());
+		serverAPI.setBookCommandEnabled(
+			serverAPI.isStartDateValid()
+		);
 	}
 }

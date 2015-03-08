@@ -13,8 +13,6 @@ public class ServerAPI {
 
 	private final ServerDolphin serverDolphin;
 
-	public ValidatingAttribute startDateValid;
-
 	private ServerAPI(ServerDolphin serverDolphin) {
 
 		this.serverDolphin = serverDolphin;
@@ -38,8 +36,6 @@ public class ServerAPI {
 		);
 		ServerPresentationModel pm = serverDolphin.presentationModel(PM_APP, null, dto);
 
-		startDateValid = new ValidatingAttribute(pm.getAt(ATT_START_DATE), pm.getAt(ATT_START_DATE, VALID_TAG));
-
 		return this;
 	}
 
@@ -55,16 +51,14 @@ public class ServerAPI {
 	public ServerAttribute getFlightType() {
 		return getPM().getAt(ATT_FLIGHT_TYPE);
 	}
+	public ServerAttribute getStartDate() {
+		return getPM().getAt(ATT_START_DATE);
+	}
+	public ServerAttribute getStartDateValid() {
+		return getPM().getAt(ATT_START_DATE, VALID_TAG);
+	}
 	public ServerAttribute getReturnTypeEnabled() {
 		return getPM().getAt(ATT_RETURN_DATE_ENABLED);
-	}
-
-	public String getStartDateValue() {
-		return (String) startDateValid.getAttribute().getValue();
-	}
-
-	public ServerAttribute getStartDate() {
-		return startDateValid.getAttribute();
 	}
 
 	public ServerAttribute getReturnDate() {

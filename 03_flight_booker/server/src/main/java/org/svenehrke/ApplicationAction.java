@@ -9,12 +9,7 @@ public class ApplicationAction extends DolphinServerAction{
 
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
 
-
-			new PMBinder().bind(getServerDolphin());
-
-
-
-
+			new PMBinder(getServerDolphin()).bind();
 		});
 
         actionRegistry.register(ApplicationConstants.COMMAND_BOOK, (command, response) -> {

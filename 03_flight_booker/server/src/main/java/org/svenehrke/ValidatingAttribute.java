@@ -2,17 +2,25 @@ package org.svenehrke;
 
 import org.opendolphin.core.server.ServerAttribute;
 
-public class ValidatingAttribute {
+import java.util.function.Function;
+
+public class ValidatingAttribute<T> {
 	private final ServerAttribute valueAttribute;
 	private final ServerAttribute sa;
+	private final Function<T, Boolean> validator;
 
-	ValidatingAttribute(ServerAttribute valueAttribute, ServerAttribute sa) {
+	ValidatingAttribute(ServerAttribute valueAttribute, ServerAttribute sa, Function<T, Boolean> validator) {
 		this.valueAttribute = valueAttribute;
 		this.sa = sa;
+		this.validator = validator;
 	}
 
 	public ServerAttribute getAttribute() {
 		return valueAttribute;
+	}
+
+	public T getValue() {
+		return (T) valueAttribute.getValue();
 	}
 
 	public void setOK(boolean ok) {
@@ -20,5 +28,11 @@ public class ValidatingAttribute {
 	}
 	public boolean isOK() {
 		return (boolean) sa.getValue();
+	}
+
+	public void bind() {
+		getAttribute().addPropertyChangeListener(evt -> {
+			setOK(validator.apply(getValue()));
+		});
 	}
 }

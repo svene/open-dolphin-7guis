@@ -4,12 +4,21 @@ import org.opendolphin.core.server.ServerDolphin;
 
 public class PMBinder {
 
-	public void bind(ServerDolphin serverDolphin) {
+	private final ServerAPI serverAPI;
+	private DomainLogic domainLogic;
+	private ValidatingAttribute<String> startDateValid;
 
-		ServerAPI serverAPI = ServerAPI.initializedInstance(serverDolphin);
-		DomainLogic domainLogic = DomainLogic.builder()
+	public PMBinder(ServerDolphin serverDolphin) {
+		serverAPI = ServerAPI.initializedInstance(serverDolphin);
+		domainLogic = DomainLogic.builder()
 			.dateTimeService(new DateTimeService())
-			.startDate(serverAPI::getStartDateValue);
+			.startDate(null);
+		startDateValid = new ValidatingAttribute<>(serverAPI.getStartDate(), serverAPI.getStartDateValid(), domainLogic::isDateStringValid);
+	}
+
+	public void bind() {
+
+		startDateValid.bind();
 
 		// Handle change: flightType -> isReturnFlight:
 		serverAPI.getFlightType().addPropertyChangeListener(evt -> {
@@ -18,11 +27,6 @@ public class PMBinder {
 			}
 			serverAPI.getReturnTypeEnabled().setValue(serverAPI.isReturnFlight());
 
-		});
-
-		// Handle change: startDate -> isStartDateValid:
-		serverAPI.getStartDate().addPropertyChangeListener(evt -> {
-			serverAPI.startDateValid.setOK(domainLogic.isDateStringValid(serverAPI.getStartDateValue()));
 		});
 
 		// Handle change: returnDate -> isReturnDateValid:
@@ -40,7 +44,7 @@ public class PMBinder {
 //			});
 
 		// Init:
-		serverAPI.getStartDate().addPropertyChangeListener(evt -> {
+		startDateValid.getAttribute().addPropertyChangeListener(evt -> {
 			evaluateBookCommandEnabled(serverAPI);
 		});
 
@@ -52,11 +56,10 @@ public class PMBinder {
 	private void evaluateBookCommandEnabled(ServerAPI serverAPI) {
 		final boolean enabled;
 		if (serverAPI.isReturnFlight()) {
-			enabled = serverAPI.startDateValid.isOK() && serverAPI.isReturnDateValid();
-
+			enabled = startDateValid.isOK() && serverAPI.isReturnDateValid();
 		}
 		else {
-			enabled = serverAPI.startDateValid.isOK();
+			enabled = startDateValid.isOK();
 		}
 
 

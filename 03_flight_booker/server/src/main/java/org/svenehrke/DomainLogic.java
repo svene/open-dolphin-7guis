@@ -17,6 +17,10 @@ public class DomainLogic {
 		return dateTimeService.isValidDate(startDateSupplier.get());
 	}
 
+	public boolean isDateStringValid(String dateString) {
+		return dateTimeService.isValidDate(dateString);
+	}
+
 	public boolean isBookingPosssible() {
 		return false;
 	}

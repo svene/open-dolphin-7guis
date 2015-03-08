@@ -1,8 +1,15 @@
 package org.svenehrke;
 
+import org.opendolphin.core.server.ServerDolphin;
+
 public class PMBinder {
 
-	public void bind(ServerAPI serverAPI, DomainLogic domainLogic) {
+	public void bind(ServerDolphin serverDolphin) {
+
+		ServerAPI serverAPI = ServerAPI.initializedInstance(serverDolphin);
+		DomainLogic domainLogic = DomainLogic.builder()
+			.dateTimeService(new DateTimeService())
+			.startDate(serverAPI::getStartDateValue);
 
 		// Handle change: flightType -> isReturnFlight:
 		serverAPI.getFlightType().addPropertyChangeListener(evt -> {
@@ -15,7 +22,13 @@ public class PMBinder {
 
 		// Handle change: startDate -> isStartDateValid:
 		serverAPI.getStartDate().addPropertyChangeListener(evt -> {
-			serverAPI.setStartDateValidity(domainLogic.isStartDateValid());
+			serverAPI.startDateValid.setOK(domainLogic.isDateStringValid(serverAPI.getStartDateValue()));
+		});
+
+		// Handle change: returnDate -> isReturnDateValid:
+		serverAPI.getReturnDate().addPropertyChangeListener(evt -> {
+			System.out.println("return date changed");
+			serverAPI.setReturnDateValidity(domainLogic.isDateStringValid((String) serverAPI.getReturnDate().getValue()));
 		});
 
 
@@ -39,11 +52,11 @@ public class PMBinder {
 	private void evaluateBookCommandEnabled(ServerAPI serverAPI) {
 		final boolean enabled;
 		if (serverAPI.isReturnFlight()) {
-			enabled = serverAPI.isStartDateValid() && serverAPI.isReturnDateValid();
+			enabled = serverAPI.startDateValid.isOK() && serverAPI.isReturnDateValid();
 
 		}
 		else {
-			enabled = serverAPI.isStartDateValid();
+			enabled = serverAPI.startDateValid.isOK();
 		}
 
 

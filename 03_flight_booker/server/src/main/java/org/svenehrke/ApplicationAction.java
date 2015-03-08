@@ -9,12 +9,8 @@ public class ApplicationAction extends DolphinServerAction{
 
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
 
-			ServerAPI serverAPI = ServerAPI.initializedInstance(getServerDolphin());
-			DomainLogic domainLogic = DomainLogic.builder()
-				.dateTimeService(new DateTimeService())
-				.startDate(serverAPI::getStartDateValue);
 
-			new PMBinder().bind(serverAPI, domainLogic);
+			new PMBinder().bind(getServerDolphin());
 
 
 

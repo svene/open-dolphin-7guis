@@ -1,5 +1,6 @@
 package org.svenehrke;
 
+import org.opendolphin.core.Tag;
 import org.opendolphin.core.server.*;
 
 import java.time.LocalDate;
@@ -7,8 +8,12 @@ import java.time.LocalDate;
 import static org.svenehrke.ApplicationConstants.*;
 
 public class ServerAPI {
+
+	public static final Tag VALID_TAG = Tag.tagFor.get(TAG_VALID);
+
 	private final ServerDolphin serverDolphin;
-	private String startDate;
+
+	public ValidatingAttribute startDateValid;
 
 	private ServerAPI(ServerDolphin serverDolphin) {
 
@@ -26,12 +31,14 @@ public class ServerAPI {
 			new Slot(ATT_FLIGHT_TYPE, ApplicationConstants.VAL_FT_ONE_WAY),
 			new Slot(ATT_RETURN_DATE_ENABLED, Boolean.FALSE),
 			new Slot(ATT_START_DATE, new DateTimeService().format(LocalDate.now())),
+			new Slot(ATT_START_DATE, Boolean.FALSE, null, VALID_TAG),
 			new Slot(ATT_RETURN_DATE, ""),
-			new Slot(ATT_VALID_START_DATE, Boolean.FALSE),
 			new Slot(ATT_VALID_RETURN_DATE, Boolean.FALSE),
 			new Slot(ATT_BOOK_COMMAND_ENABLED, Boolean.TRUE) // todo: remove redundancy to binding
 		);
 		ServerPresentationModel pm = serverDolphin.presentationModel(PM_APP, null, dto);
+
+		startDateValid = new ValidatingAttribute(pm.getAt(ATT_START_DATE), pm.getAt(ATT_START_DATE, VALID_TAG));
 
 		return this;
 	}
@@ -53,24 +60,20 @@ public class ServerAPI {
 	}
 
 	public String getStartDateValue() {
-		return (String) getStartDate().getValue();
+		return (String) startDateValid.getAttribute().getValue();
 	}
 
 	public ServerAttribute getStartDate() {
-		return getPM().getAt(ATT_START_DATE);
+		return startDateValid.getAttribute();
+	}
+
+	public ServerAttribute getReturnDate() {
+		return getPM().getAt(ATT_RETURN_DATE);
 	}
 
 	public boolean isReturnFlight() {
 		ServerAttribute attFlightType = getFlightType();
 		return VAL_FT_RETURN.equals(attFlightType.getValue());
-	}
-
-	public void setStartDateValidity(boolean valid) {
-		getPM().getAt(ATT_VALID_START_DATE).setValue(valid);
-	}
-
-	public boolean isStartDateValid() {
-		return (boolean) getPM().getAt(ATT_VALID_START_DATE).getValue();
 	}
 
 	public void setReturnDateValidity(boolean valid) {

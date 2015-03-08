@@ -22,7 +22,7 @@ public class DomainLogic {
 	}
 
 	// Builder:
-	public static IDateTimeServiceBuilder domainLogic() {
+	public static IDateTimeServiceBuilder builder() {
 		return dateTimeService -> startDateSupplier -> new DomainLogic(dateTimeService, startDateSupplier);
 	}
 	public interface IDateTimeServiceBuilder { IStartDateBuilder dateTimeService(DateTimeService dateTimeService);}

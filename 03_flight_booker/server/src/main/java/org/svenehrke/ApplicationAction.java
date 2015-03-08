@@ -10,42 +10,14 @@ public class ApplicationAction extends DolphinServerAction{
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
 
 			ServerAPI serverAPI = ServerAPI.initializedInstance(getServerDolphin());
-			DomainLogic domainLogic = DomainLogic.domainLogic()
+			DomainLogic domainLogic = DomainLogic.builder()
 				.dateTimeService(new DateTimeService())
 				.startDate(serverAPI::getStartDateValue);
 
-
-			// Handle flight type change:
-			serverAPI.getFlightType().addPropertyChangeListener(evt -> {
-				if (!(evt.getNewValue() instanceof String)) {
-					return;
-				}
-				System.out.println("*** ATT_FLIGHT_TYPE: " + evt.getNewValue());
-				serverAPI.getReturnTypeEnabled().setValue(serverAPI.isReturnFlight());
-
-			});
+			new PMBinder().bind(serverAPI, domainLogic);
 
 
-			// Handle from-date change:
-			serverAPI.getStartDate().addPropertyChangeListener(evt -> {
-				String s = serverAPI.getStartDateValue();
-				serverAPI.setStartDateValidity(domainLogic.isStartDateValid());
-			});
 
-			// Handle return-date change:
-//			attReturnDate.addPropertyChangeListener(evt -> {
-//				String s = (String) attStartDate.getValue();
-//				LocalDate localDate = new DateTimeService().parse(s);
-//				attInvalidReturnDate.setValue(localDate == null);
-//			});
-
-
-			// Init:
-			serverAPI.getStartDate().addPropertyChangeListener(evt -> {
-				evaluateBookCommandEnabled(serverAPI);
-			});
-
-			evaluateBookCommandEnabled(serverAPI);
 
 		});
 
@@ -56,9 +28,4 @@ public class ApplicationAction extends DolphinServerAction{
     }
 
 
-	private void evaluateBookCommandEnabled(ServerAPI serverAPI) {
-		serverAPI.setBookCommandEnabled(
-			serverAPI.isStartDateValid()
-		);
-	}
 }

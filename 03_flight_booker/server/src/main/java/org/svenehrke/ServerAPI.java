@@ -28,7 +28,7 @@ public class ServerAPI {
 			new Slot(ATT_START_DATE, new DateTimeService().format(LocalDate.now())),
 			new Slot(ATT_RETURN_DATE, ""),
 			new Slot(ATT_VALID_START_DATE, Boolean.FALSE),
-			new Slot(ATT_INVALID_RETURN_DATE, Boolean.FALSE),
+			new Slot(ATT_VALID_RETURN_DATE, Boolean.FALSE),
 			new Slot(ATT_BOOK_COMMAND_ENABLED, Boolean.TRUE) // todo: remove redundancy to binding
 		);
 		ServerPresentationModel pm = serverDolphin.presentationModel(PM_APP, null, dto);
@@ -71,6 +71,14 @@ public class ServerAPI {
 
 	public boolean isStartDateValid() {
 		return (boolean) getPM().getAt(ATT_VALID_START_DATE).getValue();
+	}
+
+	public void setReturnDateValidity(boolean valid) {
+		getPM().getAt(ATT_VALID_RETURN_DATE).setValue(valid);
+	}
+
+	public boolean isReturnDateValid() {
+		return (boolean) getPM().getAt(ATT_VALID_RETURN_DATE).getValue();
 	}
 
 	public void setBookCommandEnabled(boolean enabled) {

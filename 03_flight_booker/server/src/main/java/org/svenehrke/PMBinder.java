@@ -6,19 +6,22 @@ public class PMBinder {
 
 	private final ServerAPI serverAPI;
 	private DomainLogic domainLogic;
-	private ValidatingAttribute<String> startDateValid;
+	private AttributeValidator<String> startDateValidator;
+	private AttributeValidator<String> returnDateValidator;
 
 	public PMBinder(ServerDolphin serverDolphin) {
 		serverAPI = ServerAPI.initializedInstance(serverDolphin);
 		domainLogic = DomainLogic.builder()
 			.dateTimeService(new DateTimeService())
 			.startDate(null);
-		startDateValid = new ValidatingAttribute<>(serverAPI.getStartDate(), serverAPI.getStartDateValid(), domainLogic::isDateStringValid);
+		startDateValidator = new AttributeValidator<>(serverAPI.getStartDate(), serverAPI.getStartDateValid(), domainLogic::isDateStringValid);
+		returnDateValidator = new AttributeValidator<>(serverAPI.getReturnDate(), serverAPI.getReturnDateValid(), domainLogic::isDateStringValid);
 	}
 
 	public void bind() {
 
-		startDateValid.bind();
+		startDateValidator.bind();
+		returnDateValidator.bind();
 
 		// Handle change: flightType -> isReturnFlight:
 		serverAPI.getFlightType().addPropertyChangeListener(evt -> {
@@ -29,22 +32,8 @@ public class PMBinder {
 
 		});
 
-		// Handle change: returnDate -> isReturnDateValid:
-		serverAPI.getReturnDate().addPropertyChangeListener(evt -> {
-			System.out.println("return date changed");
-			serverAPI.setReturnDateValidity(domainLogic.isDateStringValid((String) serverAPI.getReturnDate().getValue()));
-		});
-
-
-		// Handle return-date change:
-//			attReturnDate.addPropertyChangeListener(evt -> {
-//				String s = (String) attStartDate.getValue();
-//				LocalDate localDate = new DateTimeService().parse(s);
-//				attInvalidReturnDate.setValue(localDate == null);
-//			});
-
 		// Init:
-		startDateValid.getAttribute().addPropertyChangeListener(evt -> {
+		startDateValidator.getAttribute().addPropertyChangeListener(evt -> {
 			evaluateBookCommandEnabled(serverAPI);
 		});
 
@@ -56,10 +45,10 @@ public class PMBinder {
 	private void evaluateBookCommandEnabled(ServerAPI serverAPI) {
 		final boolean enabled;
 		if (serverAPI.isReturnFlight()) {
-			enabled = startDateValid.isOK() && serverAPI.isReturnDateValid();
+			enabled = startDateValidator.isOK() && returnDateValidator.isOK();
 		}
 		else {
-			enabled = startDateValid.isOK();
+			enabled = startDateValidator.isOK();
 		}
 
 

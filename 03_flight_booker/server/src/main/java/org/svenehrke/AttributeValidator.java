@@ -4,12 +4,12 @@ import org.opendolphin.core.server.ServerAttribute;
 
 import java.util.function.Function;
 
-public class ValidatingAttribute<T> {
+public class AttributeValidator<T> {
 	private final ServerAttribute valueAttribute;
 	private final ServerAttribute sa;
 	private final Function<T, Boolean> validator;
 
-	ValidatingAttribute(ServerAttribute valueAttribute, ServerAttribute sa, Function<T, Boolean> validator) {
+	AttributeValidator(ServerAttribute valueAttribute, ServerAttribute sa, Function<T, Boolean> validator) {
 		this.valueAttribute = valueAttribute;
 		this.sa = sa;
 		this.validator = validator;

@@ -42,7 +42,7 @@ public class ClientAPI {
 	}
 
 	public ClientAttribute getValidReturnDate() {
-		return getPM().getAt(ATT_VALID_RETURN_DATE);
+		return getPM().getAt(ATT_RETURN_DATE, VALID_TAG);
 	}
 
 

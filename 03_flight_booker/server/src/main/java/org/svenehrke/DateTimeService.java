@@ -12,6 +12,9 @@ public class DateTimeService {
 	DateTimeFormatter formatter = dateFormatter();
 
 	public boolean isValidDate(String dateString) {
+		if (dateString == null) {
+			return false;
+		}
 		try {
 			dateFromString(dateString);
 			return true;

@@ -8,7 +8,8 @@ import org.opendolphin.core.client.comm.OnFinishedHandlerAdapter;
 
 import java.util.List;
 
-import static org.svenehrke.ApplicationConstants.COMMAND_INIT;
+import static org.svenehrke.ApplicationConstants.COMMAND_CREATE_PMS;
+import static org.svenehrke.ApplicationConstants.COMMAND_INIT_DATA;
 
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;
@@ -20,17 +21,22 @@ public class Application extends javafx.application.Application {
         bootstrap(stage);
     }
 
-
 	private void bootstrap(final Stage stage) {
 
 		mainView = new MainView();
-
-		clientDolphin.send(COMMAND_INIT, new OnFinishedHandlerAdapter() {
+		clientDolphin.send(COMMAND_CREATE_PMS, new OnFinishedHandlerAdapter() {
     		@Override
     		public void onFinished(List<ClientPresentationModel> presentationModels) {
-				new MainViewBinder(mainView, clientDolphin).bind();
-				stage.show();
-    		}
+				MainViewInitializer mainViewInitializer = new MainViewInitializer(mainView, clientDolphin).initializeBinding();
+				clientDolphin.send(COMMAND_INIT_DATA, new OnFinishedHandlerAdapter() {
+						@Override
+						public void onFinished(List<ClientPresentationModel> presentationModels) {
+							mainViewInitializer.handleDataInitializedEvent();
+							stage.show();
+						}
+					}
+				);
+			}
     	});
 
 		Scene scene = new Scene(mainView.getRoot(), 300, 300);

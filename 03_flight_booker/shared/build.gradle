@@ -10,7 +10,7 @@ repositories {
      mavenCentral()
 }
 dependencies {
-	//compile ''
+	compile "org.open-dolphin:dolphin-shared:$dolphinVersion"
 	testCompile 'junit:junit:4.11'
 }
 

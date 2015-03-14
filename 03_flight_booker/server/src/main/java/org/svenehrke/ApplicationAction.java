@@ -7,9 +7,16 @@ public class ApplicationAction extends DolphinServerAction{
 
     public void registerIn(ActionRegistry actionRegistry) {
 
-        actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
+        actionRegistry.register(ApplicationConstants.COMMAND_CREATE_PMS, (command, response) -> {
 
-			new PMBinder(getServerDolphin()).bind();
+			ServerFlightBooker flightBooker = ServerFlightBooker.initializedInstance(getServerDolphin());
+			PMInitializer pmInitializer = new PMInitializer(flightBooker);
+			pmInitializer.createPMs();
+			pmInitializer.bind();
+		});
+
+        actionRegistry.register(ApplicationConstants.COMMAND_INIT_DATA, (command, response) -> {
+			new PMInitializer(new ServerFlightBooker(getServerDolphin())).initData();
 		});
 
         actionRegistry.register(ApplicationConstants.COMMAND_BOOK, (command, response) -> {

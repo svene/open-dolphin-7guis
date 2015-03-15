@@ -15,10 +15,10 @@ public class ApplicationConstants {
     public static final String VAL_FT_ONE_WAY = "o";
     public static final String VAL_FT_RETURN = "r";
 
-    public static final String ATT_RETURN_DATE_ENABLED = "ATT_RETURN_DATE_ENABLED";
-
 	public static final String ATT_START_DATE = "ATT_START_DATE";
 	public static final String ATT_RETURN_DATE = "ATT_RETURN_DATE";
+
+	public static final String ATT_MESSAGE = "ATT_MESSAGE";
 
 	public static final String COMMAND_CREATE_PMS = unique("COMMAND_CREATE_PMS");
 	public static final String COMMAND_INIT_DATA = unique("COMMAND_INIT_DATA");

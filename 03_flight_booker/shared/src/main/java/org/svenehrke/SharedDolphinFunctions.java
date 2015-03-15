@@ -1,11 +1,9 @@
 package org.svenehrke;
 
-import org.opendolphin.core.Attribute;
 import org.opendolphin.core.BaseAttribute;
 import org.opendolphin.core.PresentationModel;
 import org.opendolphin.core.Tag;
 
-import java.beans.PropertyChangeListener;
 import java.util.function.Function;
 
 public class SharedDolphinFunctions {

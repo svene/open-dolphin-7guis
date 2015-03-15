@@ -12,29 +12,37 @@ public class MainViewInitializer {
 
 	private final MainView mainView;
 	private final ClientFlightBooker flightBooker;
+	private final ClientDolphin clientDolphin;
 
 	public MainViewInitializer(MainView mainView, ClientDolphin clientDolphin) {
 
 		this.mainView = mainView;
-		flightBooker = new ClientFlightBooker(clientDolphin);
+		this.clientDolphin = clientDolphin;
+		flightBooker = new ClientFlightBooker(this.clientDolphin);
 	}
 
 	public MainViewInitializer initializeBinding() {
 
 		// Flight Type:
-		ODComboBoxes.bindSelectionTo(mainView.getFlightTypeComboBox(), flightBooker.getFlightType());
+		ODComboBoxes.bindSelectionTo(mainView.flightTypeComboBox, flightBooker.getFlightType());
 
 		// Start Date:
-		ODTextFields.addChangeBindingFromTo(mainView.getStartDateTextField(), flightBooker.getStartDate());
-		ODTextFields.addRedBackgroundHandling(flightBooker.getStartDate(VALID_TAG), mainView.getStartDateTextField());
+		ODTextFields.addChangeBindingFromTo(mainView.startDateTextField, flightBooker.getStartDate());
+		ODTextFields.addRedBackgroundHandling(flightBooker.getStartDate(VALID_TAG), mainView.startDateTextField);
 
 		// Return Date:
-		ODTextFields.addChangeBindingFromTo(mainView.getReturnDateTextField(), flightBooker.getReturnDate());
-		ODTextFields.addRedBackgroundHandling(flightBooker.getReturnDate(VALID_TAG), mainView.getReturnDateTextField());
-		ODNodes.addDisablingBinding(flightBooker.getReturnDate(Tag.ENABLED), mainView.getReturnDateTextField());
+		ODTextFields.addChangeBindingFromTo(mainView.returnDateTextField, flightBooker.getReturnDate());
+		ODTextFields.addRedBackgroundHandling(flightBooker.getReturnDate(VALID_TAG), mainView.returnDateTextField);
+		ODNodes.addDisablingBinding(flightBooker.getReturnDate(Tag.ENABLED), mainView.returnDateTextField);
 
 		// Book Button:
-		ODNodes.addDisablingBinding(flightBooker.getBookCommandEnabled(), mainView.getBookButton());
+		ODNodes.addDisablingBinding(flightBooker.getBookCommandEnabled(), mainView.bookButton);
+		mainView.bookButton.setOnAction(event -> clientDolphin.send(COMMAND_BOOK));
+
+		// Message:
+		flightBooker.getPM().getAt(ATT_MESSAGE).addPropertyChangeListener(PROP_VALUE, evt -> {
+			mainView.messageLabel.setText((String) evt.getNewValue());
+		});
 
 		return this;
 	}
@@ -44,13 +52,13 @@ public class MainViewInitializer {
 	 */
 	public void handleDataInitializedEvent() {
 
-		ComboBox<Pair<String, String>> cb = mainView.getFlightTypeComboBox();
+		ComboBox<Pair<String, String>> cb = mainView.flightTypeComboBox;
 
 		// todo (Sven 13.03.15): initialize the supported values on the serverside:
 		cb.getItems().addAll(FXCollections.observableArrayList(new Pair<>(ApplicationConstants.VAL_FT_ONE_WAY, "one-way-flight"), new Pair<>(ApplicationConstants.VAL_FT_RETURN, "return flight")));
 		ODComboBoxes.populateFromAttribute(cb, flightBooker.getFlightType());
 
-		ODTextFields.populateFromAttribute(mainView.getStartDateTextField(), flightBooker.getStartDate());
-		ODTextFields.populateFromAttribute(mainView.getReturnDateTextField(), flightBooker.getReturnDate());
+		ODTextFields.populateFromAttribute(mainView.startDateTextField, flightBooker.getStartDate());
+		ODTextFields.populateFromAttribute(mainView.returnDateTextField, flightBooker.getReturnDate());
 	}
 }

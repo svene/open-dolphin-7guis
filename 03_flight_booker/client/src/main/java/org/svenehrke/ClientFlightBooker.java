@@ -16,7 +16,7 @@ public class ClientFlightBooker {
 		this.clientDolphin = clientDolphin;
 	}
 
-	private ClientPresentationModel getPM() {
+	public ClientPresentationModel getPM() {
 		return clientDolphin.getAt(PM_APP);
 	}
 

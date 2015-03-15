@@ -23,7 +23,8 @@ public class Application extends javafx.application.Application {
 
 	private void bootstrap(final Stage stage) {
 
-		mainView = new MainView();
+		int maxWidth = 300;
+		mainView = new MainView(maxWidth);
 		clientDolphin.send(COMMAND_CREATE_PMS, new OnFinishedHandlerAdapter() {
     		@Override
     		public void onFinished(List<ClientPresentationModel> presentationModels) {
@@ -39,7 +40,7 @@ public class Application extends javafx.application.Application {
 			}
     	});
 
-		Scene scene = new Scene(mainView.getRoot(), 300, 300);
+		Scene scene = new Scene(mainView.root, maxWidth, 300);
 		scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("7 GUIs: Flight Booker");

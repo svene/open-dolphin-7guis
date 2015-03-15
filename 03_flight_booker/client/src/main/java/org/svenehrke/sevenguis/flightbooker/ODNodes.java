@@ -1,11 +1,11 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.scene.Node;
 import org.opendolphin.core.client.ClientAttribute;
 
 import java.beans.PropertyChangeListener;
 
-import static org.svenehrke.ApplicationConstants.PROP_VALUE;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.PROP_VALUE;
 
 public class ODNodes {
 

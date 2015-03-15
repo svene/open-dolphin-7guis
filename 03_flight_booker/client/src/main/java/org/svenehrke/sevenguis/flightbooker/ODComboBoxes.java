@@ -1,10 +1,10 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.scene.control.ComboBox;
 import javafx.util.Pair;
 import org.opendolphin.core.client.ClientAttribute;
 
-import static org.svenehrke.SharedDolphinFunctions.stringValue;
+import static org.svenehrke.sevenguis.flightbooker.SharedDolphinFunctions.stringValue;
 
 public class ODComboBoxes {
 

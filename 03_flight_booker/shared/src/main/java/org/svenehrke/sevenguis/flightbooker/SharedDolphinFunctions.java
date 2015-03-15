@@ -1,8 +1,9 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import org.opendolphin.core.BaseAttribute;
 import org.opendolphin.core.PresentationModel;
 import org.opendolphin.core.Tag;
+import org.svenehrke.sevenguis.flightbooker.ApplicationConstants;
 
 import java.util.function.Function;
 

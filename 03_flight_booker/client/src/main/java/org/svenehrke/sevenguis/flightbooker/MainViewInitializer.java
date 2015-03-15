@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
@@ -7,7 +7,7 @@ import org.opendolphin.core.Tag;
 import org.opendolphin.core.client.ClientDolphin;
 import org.opendolphin.core.client.ClientPresentationModel;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.*;
 
 public class MainViewInitializer {
 

@@ -1,10 +1,10 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import org.opendolphin.core.server.ServerPresentationModel;
 
 import java.time.LocalDate;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.*;
 
 public class PMInitializer {
 

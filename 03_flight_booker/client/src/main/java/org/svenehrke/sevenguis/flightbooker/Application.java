@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -8,8 +8,8 @@ import org.opendolphin.core.client.comm.OnFinishedHandlerAdapter;
 
 import java.util.List;
 
-import static org.svenehrke.ApplicationConstants.COMMAND_CREATE_PMS;
-import static org.svenehrke.ApplicationConstants.COMMAND_INIT_DATA;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.COMMAND_CREATE_PMS;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.COMMAND_INIT_DATA;
 
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;

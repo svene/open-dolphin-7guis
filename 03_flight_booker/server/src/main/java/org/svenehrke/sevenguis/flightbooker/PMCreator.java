@@ -1,11 +1,11 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import org.opendolphin.core.Tag;
 import org.opendolphin.core.server.DTO;
 import org.opendolphin.core.server.ServerDolphin;
 import org.opendolphin.core.server.Slot;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.*;
 
 public class PMCreator {
 

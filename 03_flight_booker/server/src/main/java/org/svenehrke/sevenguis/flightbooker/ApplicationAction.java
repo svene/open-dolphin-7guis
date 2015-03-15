@@ -1,11 +1,11 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import org.opendolphin.core.server.ServerPresentationModel;
 import org.opendolphin.core.server.action.DolphinServerAction;
 import org.opendolphin.core.server.comm.ActionRegistry;
 
-import static org.svenehrke.ApplicationConstants.*;
-import static org.svenehrke.SharedDolphinFunctions.stringValue;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.flightbooker.SharedDolphinFunctions.stringValue;
 
 public class ApplicationAction extends DolphinServerAction{
 

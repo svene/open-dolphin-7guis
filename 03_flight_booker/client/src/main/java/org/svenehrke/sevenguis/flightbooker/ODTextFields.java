@@ -1,11 +1,11 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.css.PseudoClass;
 import javafx.scene.control.TextField;
 import org.opendolphin.core.client.ClientAttribute;
 
-import static org.svenehrke.ApplicationConstants.PROP_VALUE;
-import static org.svenehrke.SharedDolphinFunctions.stringValue;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.PROP_VALUE;
+import static org.svenehrke.sevenguis.flightbooker.SharedDolphinFunctions.stringValue;
 
 public class ODTextFields {
 

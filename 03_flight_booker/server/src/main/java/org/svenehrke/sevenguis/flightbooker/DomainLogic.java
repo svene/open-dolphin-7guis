@@ -1,9 +1,9 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import java.time.LocalDate;
 import java.util.function.Supplier;
 
-import static org.svenehrke.ApplicationConstants.VAL_FT_RETURN;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.VAL_FT_RETURN;
 
 public class DomainLogic {
 

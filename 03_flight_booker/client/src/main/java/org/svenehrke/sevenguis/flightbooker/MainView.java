@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

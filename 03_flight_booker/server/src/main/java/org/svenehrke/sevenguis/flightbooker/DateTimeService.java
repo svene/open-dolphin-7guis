@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import java.time.LocalDate;
 import java.time.format.*;

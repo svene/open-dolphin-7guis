@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import org.opendolphin.core.Tag;
 import org.opendolphin.core.server.ServerDolphin;
@@ -6,8 +6,8 @@ import org.opendolphin.core.server.ServerPresentationModel;
 
 import java.util.Arrays;
 
-import static org.svenehrke.ApplicationConstants.*;
-import static org.svenehrke.SharedDolphinFunctions.*;
+import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.flightbooker.SharedDolphinFunctions.*;
 
 public class PMBinder {
 

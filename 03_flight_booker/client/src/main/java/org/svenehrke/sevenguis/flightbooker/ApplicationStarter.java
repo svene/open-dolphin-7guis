@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.application.Application;
 import org.opendolphin.core.client.ClientDolphin;
@@ -18,8 +18,8 @@ public class ApplicationStarter {
         clientDolphin.setClientConnector(connector);
 
 
-        org.svenehrke.Application.clientDolphin = clientDolphin;
-        Application.launch(org.svenehrke.Application.class);
+        org.svenehrke.sevenguis.flightbooker.Application.clientDolphin = clientDolphin;
+        Application.launch(org.svenehrke.sevenguis.flightbooker.Application.class);
     }
 
     private static ClientConnector createConnector(ClientDolphin clientDolphin) {

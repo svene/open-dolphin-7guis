@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.flightbooker;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;

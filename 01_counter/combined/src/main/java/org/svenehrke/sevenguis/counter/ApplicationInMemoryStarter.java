@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.counter;
 
 import org.opendolphin.core.client.comm.JavaFXUiThreadHandler;
 import org.opendolphin.core.comm.DefaultInMemoryConfig;
@@ -9,8 +9,8 @@ public class ApplicationInMemoryStarter {
         config.getServerDolphin().registerDefaultActions();
         config.getClientDolphin().getClientConnector().setUiThreadHandler(new JavaFXUiThreadHandler());
         registerApplicationActions(config);
-        org.svenehrke.Application.clientDolphin = config.getClientDolphin();
-        javafx.application.Application.launch(org.svenehrke.Application.class);
+        Application.clientDolphin = config.getClientDolphin();
+		Application.launch(Application.class);
     }
 
     private static void registerApplicationActions(DefaultInMemoryConfig config) {

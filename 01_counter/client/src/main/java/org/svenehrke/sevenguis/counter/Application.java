@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.counter;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -18,7 +17,7 @@ import org.opendolphin.core.client.comm.OnFinishedHandlerAdapter;
 
 import java.util.List;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.counter.ApplicationConstants.*;
 
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;

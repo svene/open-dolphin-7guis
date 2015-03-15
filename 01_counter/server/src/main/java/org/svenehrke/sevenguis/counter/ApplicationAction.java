@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.counter;
 
 import org.opendolphin.core.server.DTO;
 import org.opendolphin.core.server.ServerAttribute;
@@ -6,7 +6,7 @@ import org.opendolphin.core.server.Slot;
 import org.opendolphin.core.server.action.DolphinServerAction;
 import org.opendolphin.core.server.comm.ActionRegistry;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.counter.ApplicationConstants.*;
 
 public class ApplicationAction extends DolphinServerAction{
 

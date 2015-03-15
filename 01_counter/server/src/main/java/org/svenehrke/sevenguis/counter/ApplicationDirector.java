@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.counter;
 
 import org.opendolphin.core.server.action.DolphinServerAction;
 import org.opendolphin.core.server.comm.ActionRegistry;

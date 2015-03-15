@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.temperatureconverter.servlet;
 
 public class TemperatureConverter {
 

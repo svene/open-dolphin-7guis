@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.temperatureconverter;
 
 /**
  * Place for shared information among client and server. Typically identifiers for models, attributes and actions.

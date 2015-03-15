@@ -1,4 +1,4 @@
-package org.svenehrke.servlet;
+package org.svenehrke.sevenguis.temperatureconverter.servlet;
 
 import javax.servlet.ServletException;
 import java.io.IOException;

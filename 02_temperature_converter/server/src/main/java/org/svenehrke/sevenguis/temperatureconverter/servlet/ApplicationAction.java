@@ -1,12 +1,13 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.temperatureconverter.servlet;
 
 import org.opendolphin.core.server.DTO;
 import org.opendolphin.core.server.ServerPresentationModel;
 import org.opendolphin.core.server.Slot;
 import org.opendolphin.core.server.action.DolphinServerAction;
 import org.opendolphin.core.server.comm.ActionRegistry;
+import org.svenehrke.sevenguis.temperatureconverter.ApplicationConstants;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.temperatureconverter.ApplicationConstants.*;
 
 public class ApplicationAction extends DolphinServerAction{
 

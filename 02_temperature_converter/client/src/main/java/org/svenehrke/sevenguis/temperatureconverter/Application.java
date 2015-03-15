@@ -1,4 +1,4 @@
-package org.svenehrke;
+package org.svenehrke.sevenguis.temperatureconverter;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -17,7 +17,7 @@ import org.opendolphin.core.client.comm.OnFinishedHandlerAdapter;
 
 import java.util.List;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.sevenguis.temperatureconverter.ApplicationConstants.*;
 
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;

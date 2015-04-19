@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.opendolphin.binding.JFXBinder;
@@ -24,9 +23,10 @@ import java.util.List;
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;
 
-    private Button button;
-    private Label greetingLabel;
+    private Button resetButton;
+    private Label elapsedTimeLabel;
     private ProgressBar progressBar;
+    private Slider slider;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -35,27 +35,33 @@ public class Application extends javafx.application.Application {
 
     private Pane rootView() {
         Pane pane = new Pane();
-		pane.setStyle("-fx-background-color: #008000;");
         VBox vBox = new VBox(10);
         vBox.setPadding(new Insets(10));
         vBox.setSpacing(10);
-
-        progressBar = new ProgressBar();
-        progressBar.setProgress(0.6);
-
-        button = new Button();
-        greetingLabel = new Label("");
-        greetingLabel.setTextFill(Color.WHITE);
-        greetingLabel.setFont(Font.font("Verdana", 20));
+        vBox.setFillWidth(true);
+        pane.getChildren().addAll(vBox);
 
         HBox hBox = new HBox();
+        progressBar = new ProgressBar();
+        progressBar.setProgress(0.6);
         hBox.getChildren().addAll(new Label("Elapsed time:"), progressBar);
-
-        pane.getChildren().addAll(vBox);
         vBox.getChildren().addAll(hBox);
-        vBox.getChildren().addAll(button);
-        vBox.getChildren().addAll(greetingLabel);
-        button.setText("Greet");
+
+        elapsedTimeLabel = new Label("11.8s");
+        vBox.getChildren().addAll(elapsedTimeLabel);
+
+        hBox = new HBox();
+        slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(100);
+        slider.setValue(60);
+        hBox.getChildren().addAll(new Label("Duration"), slider);
+        vBox.getChildren().addAll(hBox);
+
+        resetButton = new Button();
+        resetButton.setText("Reset");
+        vBox.getChildren().addAll(resetButton);
+
         return pane;
     }
 
@@ -72,7 +78,7 @@ public class Application extends javafx.application.Application {
     		}
     	});
 
-		Scene scene = new Scene(root, 300, 300);
+		Scene scene = new Scene(root, 300, 150);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("7 GUIs: Timer");
@@ -82,13 +88,13 @@ public class Application extends javafx.application.Application {
 
         PresentationModel pm = clientDolphin.getAt(PM_APP);
 
-        JFXBinder.bind(ATT_GREETING).of(pm).to("text").of(greetingLabel);
+//        JFXBinder.bind(ATT_GREETING).of(pm).to("text").of(elapsedTimeLabel);
 
         clientDolphin.getAt(PM_APP).getAt(ATT_NAME).setValue("Duke");
     }
 
     private void addClientSideAction() {
-        button.setOnAction(new EventHandler<ActionEvent>() {
+        resetButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 clientDolphin.send(COMMAND_GREET);

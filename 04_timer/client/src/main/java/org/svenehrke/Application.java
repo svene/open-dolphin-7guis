@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -45,10 +46,13 @@ public class Application extends javafx.application.Application {
         button = new Button();
         greetingLabel = new Label("");
         greetingLabel.setTextFill(Color.WHITE);
-        greetingLabel.setFont(Font.font ("Verdana", 20));
+        greetingLabel.setFont(Font.font("Verdana", 20));
+
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(new Label("Elapsed time:"), progressBar);
 
         pane.getChildren().addAll(vBox);
-        vBox.getChildren().addAll(progressBar);
+        vBox.getChildren().addAll(hBox);
         vBox.getChildren().addAll(button);
         vBox.getChildren().addAll(greetingLabel);
         button.setText("Greet");
@@ -69,6 +73,7 @@ public class Application extends javafx.application.Application {
     	});
 
 		Scene scene = new Scene(root, 300, 300);
+        scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("7 GUIs: Timer");
 	}

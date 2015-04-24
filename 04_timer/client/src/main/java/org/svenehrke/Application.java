@@ -1,8 +1,10 @@
 package org.svenehrke;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -32,6 +34,9 @@ public class Application extends javafx.application.Application {
     private Label elapsedTimeLabel;
     private ProgressBar progressBar;
     private Slider slider;
+
+    public static final Integer START_TIME = 5;
+    private IntegerProperty timeSeconds = new SimpleIntegerProperty(START_TIME);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -67,6 +72,8 @@ public class Application extends javafx.application.Application {
         resetButton.setText("Reset");
         vBox.getChildren().addAll(resetButton);
 
+        elapsedTimeLabel.textProperty().bind(timeSeconds.asString().concat("s"));
+
         return pane;
     }
 
@@ -88,13 +95,16 @@ public class Application extends javafx.application.Application {
 		stage.setScene(scene);
 		stage.setTitle("7 GUIs: Timer");
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2500), ae -> doSomething()));
-        timeline.setCycleCount(Animation.INDEFINITE);
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(
+            new KeyFrame(Duration.seconds(START_TIME+1), new KeyValue(timeSeconds, 0))
+        );
+        timeline.playFromStart();
         timeline.play();
 	}
 
     private void doSomething() {
-        System.out.println("triggered");
+        System.out.println("timeSeconds = " + timeSeconds);
     }
 
     private void setupBinding() {

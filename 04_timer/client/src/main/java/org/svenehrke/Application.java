@@ -35,8 +35,9 @@ public class Application extends javafx.application.Application {
     private ProgressBar progressBar;
     private Slider slider;
 
-    public static final Integer START_TIME = 5;
-    private IntegerProperty timeSeconds = new SimpleIntegerProperty(START_TIME);
+    public static final Integer START_TIME = 15;
+    private IntegerProperty timeSeconds = new SimpleIntegerProperty(START_TIME * 100);
+    private Timeline timeline;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -53,11 +54,10 @@ public class Application extends javafx.application.Application {
 
         HBox hBox = new HBox();
         progressBar = new ProgressBar();
-        progressBar.setProgress(0.6);
         hBox.getChildren().addAll(new Label("Elapsed time:"), progressBar);
         vBox.getChildren().addAll(hBox);
 
-        elapsedTimeLabel = new Label("11.8s");
+        elapsedTimeLabel = new Label("");
         vBox.getChildren().addAll(elapsedTimeLabel);
 
         hBox = new HBox();
@@ -72,7 +72,9 @@ public class Application extends javafx.application.Application {
         resetButton.setText("Reset");
         vBox.getChildren().addAll(resetButton);
 
-        elapsedTimeLabel.textProperty().bind(timeSeconds.asString().concat("s"));
+        // Binding:
+        elapsedTimeLabel.textProperty().bind(timeSeconds.divide(100).asString().concat("s"));
+        progressBar.progressProperty().bind(timeSeconds.divide(START_TIME*100.0).subtract(1).multiply(-1));
 
         return pane;
     }
@@ -80,9 +82,9 @@ public class Application extends javafx.application.Application {
     private void bootstrap(final Stage stage) {
 
 		Pane root = rootView();
-		addClientSideAction();
+        addClientSideAction();
 
-		clientDolphin.send(COMMAND_INIT, new OnFinishedHandlerAdapter() {
+        clientDolphin.send(COMMAND_INIT, new OnFinishedHandlerAdapter() {
             @Override
             public void onFinished(List<ClientPresentationModel> presentationModels) {
                 setupBinding();
@@ -92,15 +94,22 @@ public class Application extends javafx.application.Application {
 
 		Scene scene = new Scene(root, 300, 150);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
-		stage.setScene(scene);
+        stage.setScene(scene);
 		stage.setTitle("7 GUIs: Timer");
 
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(
-            new KeyFrame(Duration.seconds(START_TIME+1), new KeyValue(timeSeconds, 0))
+        resetButton.setOnAction(e -> {
+                if (timeline != null) {
+                    timeline.stop();
+                }
+                timeSeconds.set((START_TIME + 1) * 100);
+                timeline = new Timeline();
+                timeline.getKeyFrames().add(
+                    new KeyFrame(Duration.seconds(START_TIME + 1), new KeyValue(timeSeconds, 0))
+                );
+                timeline.playFromStart();
+            }
         );
-        timeline.playFromStart();
-        timeline.play();
+
 	}
 
     private void doSomething() {

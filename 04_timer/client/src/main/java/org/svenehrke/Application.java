@@ -61,8 +61,8 @@ public class Application extends javafx.application.Application {
         hBox = new HBox();
         slider = new Slider();
         slider.setMin(0);
-        slider.setMax(100);
-        slider.setValue(60);
+        slider.setMax(20);
+        slider.setValue(DURATION_SEC);
         hBox.getChildren().addAll(new Label("Duration"), slider);
         vBox.getChildren().addAll(hBox);
 
@@ -96,21 +96,31 @@ public class Application extends javafx.application.Application {
 
         // Binding:
         elapsedTimeLabel.textProperty().bind(timeSeconds.divide(100).asString().concat("s"));
-        progressBar.progressProperty().bind(timeSeconds.divide(DURATION_SEC * 100.0));
+        progressBar.progressProperty().bind(timeSeconds.divide(slider.getValue() * 100.0));
+
+
+        slider.valueProperty().addListener((s, o, n) -> {
+            System.out.println("n = " + n);
+            startTimeLine();
+        });
 
         resetButton.setOnAction(e -> {
-                if (timeline != null) {
-                    timeline.stop();
-                }
-                timeSeconds.set(0);
-                timeline = new Timeline();
-                timeline.getKeyFrames().add(
-                    new KeyFrame(Duration.seconds(DURATION_SEC), new KeyValue(timeSeconds, DURATION_SEC * 100))
-                );
-                timeline.playFromStart();
+                startTimeLine();
             }
         );
 
+    }
+
+    private void startTimeLine() {
+        if (timeline != null) {
+			timeline.stop();
+		}
+        timeSeconds.set(0);
+        timeline = new Timeline();
+        timeline.getKeyFrames().add(
+			new KeyFrame(Duration.seconds(slider.getValue()), new KeyValue(timeSeconds, slider.getValue() * 100))
+		);
+        timeline.playFromStart();
     }
 
 }

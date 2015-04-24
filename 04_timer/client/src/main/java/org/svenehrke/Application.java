@@ -5,8 +5,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,14 +16,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.opendolphin.core.PresentationModel;
 import org.opendolphin.core.client.ClientDolphin;
 import org.opendolphin.core.client.ClientPresentationModel;
 import org.opendolphin.core.client.comm.OnFinishedHandlerAdapter;
 
 import java.util.List;
 
-import static org.svenehrke.ApplicationConstants.*;
+import static org.svenehrke.ApplicationConstants.COMMAND_INIT;
 
 public class Application extends javafx.application.Application {
     static ClientDolphin clientDolphin;
@@ -79,7 +76,6 @@ public class Application extends javafx.application.Application {
     private void bootstrap(final Stage stage) {
 
 		Pane root = rootView();
-        addClientSideAction();
 
         clientDolphin.send(COMMAND_INIT, new OnFinishedHandlerAdapter() {
             @Override
@@ -95,17 +91,8 @@ public class Application extends javafx.application.Application {
 		stage.setTitle("7 GUIs: Timer");
 	}
 
-    private void doSomething() {
-        System.out.println("timeSeconds = " + timeSeconds);
-    }
-
     private void setupBinding() {
 
-        PresentationModel pm = clientDolphin.getAt(PM_APP);
-
-//        JFXBinder.bind(ATT_GREETING).of(pm).to("text").of(elapsedTimeLabel);
-
-        clientDolphin.getAt(PM_APP).getAt(ATT_NAME).setValue("Duke");
 
         // Binding:
         elapsedTimeLabel.textProperty().bind(timeSeconds.divide(100).asString().concat("s"));
@@ -126,12 +113,4 @@ public class Application extends javafx.application.Application {
 
     }
 
-    private void addClientSideAction() {
-        resetButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                clientDolphin.send(COMMAND_GREET);
-            }
-        });
-    }
 }

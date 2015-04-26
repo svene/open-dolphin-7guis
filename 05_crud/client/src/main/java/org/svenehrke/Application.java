@@ -34,7 +34,7 @@ public class Application extends javafx.application.Application {
 
 		Pane root = rootView();
 
-		Scene scene = new Scene(root, 300, 300);
+		Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("7 GUIs: CRUD");

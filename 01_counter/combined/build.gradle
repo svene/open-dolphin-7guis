@@ -15,7 +15,7 @@ dependencies {
     testCompile "junit:junit:4.11"
 }
 
-mainClassName = 'org.svenehrke.ApplicationInMemoryStarter'
+mainClassName = 'org.svenehrke.sevenguis.counter.ApplicationInMemoryStarter'
 
 gradle.taskGraph.whenReady { tg ->
 	if (tg.hasTask(':runWithGroovy')) {

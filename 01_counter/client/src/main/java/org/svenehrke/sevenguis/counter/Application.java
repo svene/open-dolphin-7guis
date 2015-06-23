@@ -30,7 +30,6 @@ public class Application extends javafx.application.Application {
 
         Pane root = setupStage();
 
-        addClientSideAction();
         initializePMs();
 
         Scene scene = new Scene(root, 300, 300);
@@ -67,11 +66,9 @@ public class Application extends javafx.application.Application {
 
     private void setupBinding() {
 
+        button.setOnAction(actionEvent -> clientDolphin.send(COMMAND_INC_COUNTER));
         PresentationModel pm = clientDolphin.getAt(PM_APP);
         JFXBinder.bind(ATT_COUNTER).of(pm).to("text").of(counterLabel);
     }
 
-    private void addClientSideAction() {
-        button.setOnAction(actionEvent -> clientDolphin.send(COMMAND_INC_COUNTER));
-    }
 }

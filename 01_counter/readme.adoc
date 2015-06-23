@@ -54,6 +54,7 @@ private void initializePMs() {
 ----
 
 In *setupBinding*
+
 * the actionHandler of the button is bound to sending the INC_COUNTER command to the server.
 * the label and the attribute COUNTER are bound to each other
 

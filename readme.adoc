@@ -1,0 +1,19 @@
+= 7 GUIs with OpenDolpin
+
+Dierk König discovered https://github.com/eugenkiss/7guis/wiki[7 GUIs: A Notational Usability Benchmark for GUI Programming]
+and we thought it would be a great to have an OpenDolphin implementation of it.
+
+For me not necessarily the notational usability aspect is important but to find a good OpenDolphin implementation.
+
+So far I have implemented 3 of the GUIs. In the following blog posts I will explain
+how I implemented them and what I have learned while doing it.
+
+Some of the 7 GUIs are only concerned with UI toolkit functionality.
+Since I want to focus on the ones which are more insteresting from an OpenDolphin point of view I skipped those for now.
+
+For the client technology I decided to use JavaFX in a simple programmatic way and
+I will try to find the time to do a HTML GUI in the future.
+
+When you go through these blog post I recommend that you look at the original description of
+https://github.com/eugenkiss/7guis/wiki[7 GUIs: A Notational Usability Benchmark for GUI Programming]
+because I will not repeat it's description here.

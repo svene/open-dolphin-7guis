@@ -1,0 +1,118 @@
+= GUI 2: Temperature Converter
+
+https://github.com/eugenkiss/7guis/wiki#temperature-converter[Temperature Converter in original 7 GUIs]
+
+image::docs/images/2015-06-24_7guis_02_temperature_converter.png[]
+
+== Usage
+
+You can run the application either from the commandline or from the IDE.
+
+=== Commandline
+
+From the commandline in folder _combined_ invoke:
+
+----
+./gradlew run
+----
+
+=== IntelliJ IDEA
+
+To run it from IntelliJ IDEA simply open _build.gradle_ in the folder _combined_ and then run _ApplicationInMemoryStarter_.
+
+=== Other IDEs
+
+With the proper gradle support/plugins it should also be possible to open the gradle files with Eclipse or Netbeans.
+Alternatively you can convert the gradle files to maven pom files.
+
+== How it is done
+
+From an OpenDolphin point of view the interesting parts are the following:
+
+In the start routine of the JavaFX Application *setupStage* is called which creates all the widgets for the GUI.
+No widgets are not populated with meaningful data yet.
+
+Then *initializePMs* is called which sends the *INIT* command to the server.
+As in the _counter_ example *setupBinding* is called in it's _OnFinishedHandler_ without using the passed presentation models.
+
+At the point in time it is clear that all the PMs exist on the serverside and on the clientside.
+This means the widgets and the presentation modesls can be safely bound to each other.
+
+In *setupBinding*
+
+.setupBinding()
+----
+PresentationModel pm = clientDolphin.getAt(PM_APP);
+
+JFXBinder.bind("text").of(celsiusTextField).to(ATT_CELSIUS).of(pm);
+JFXBinder.bind(ATT_CELSIUS).of(pm).to("text").of(celsiusTextField);
+
+JFXBinder.bind("text").of(fahrenheitTextField).to(ATT_FAHRENHEIT).of(pm);
+JFXBinder.bind(ATT_FAHRENHEIT).of(pm).to("text").of(fahrenheitTextField);
+
+
+celsiusTextField.focusedProperty().addListener((s,o,gained) -> {
+  System.out.println("celsiusTextField.focusedProperty: gained: " + gained);
+  if (gained) {
+    pm.getAt(ATT_DIRECTION).setValue(VAL_DIRECTION_CELSIUS_TO_FAHRENHEIT);
+  }
+});
+
+fahrenheitTextField.focusedProperty().addListener((s,o,gained) -> {
+  System.out.println("fahrenheitTextField.focusedProperty: gained: " + gained);
+  if (gained) {
+    pm.getAt(ATT_DIRECTION).setValue(VAL_DIRECTION_FAHRENHEIT_TO_CELSIUS);
+  }
+});
+----
+
+As expected the textfields for _celsius_ and _fahrenheit_ are bound to the appropriate Attributes.
+More insteresting is the Attribute *ATT_DIRECTION* which is an indicator for client and server in which
+direction the conversion should go.
+It is set appropriately when either the _celsius_ or the _fahrenheit_ textfield get the focus.
+When will see later how the serverside makes use of it.
+
+This is all worth mentioning about the clientside.
+As you can see it is really not much code.
+So let's have a look at the serverside.
+
+
+On the serverside the INIT command creates a PM holding the COUNTER attribute which in addition is initialized to "0".
+
+.INIT Command
+----
+actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
+  // Create PM:
+  DTO dto = new DTO( new Slot(ATT_COUNTER, null) );
+  getServerDolphin().presentationModel(PM_APP, null, dto);
+
+  // Init PM:
+  getServerDolphin().getAt(PM_APP).getAt(ATT_COUNTER).setValue("0");
+});
+----
+
+The INC_COUNTER command simply increments the counter by 1.
+
+.INC_COUNTER Command
+----
+actionRegistry.register(ApplicationConstants.COMMAND_INC_COUNTER, (command, response) -> {
+  ServerAttribute counterAttribute = getServerDolphin().getAt(PM_APP).getAt(ATT_COUNTER);
+  Integer i = Integer.valueOf((String) counterAttribute.getValue()) + 1;
+  String newValue = String.valueOf(i);
+  counterAttribute.setValue(newValue);
+});
+----
+
+
+== Conclusion
+
+As intended by the 7 GUIs this first example was not very complex.
+But even though we learned a couple of things so that we could make some important design desicions:
+
+* The onFinishedHandler of *initializePMs* only calls *setupBinding*.
+Alternatively it could have inspected the list of PMs passed to it but that would become difficult when many different PMs get passed.
+* At the point in time *setupBinding()* is called it is clear that all the PMs exist on the serverside and on the clientside.
+Therefore it is then safe to bind them to the widgets.
+
+In the next blog post we will look at the *Temperature Converter*.
+

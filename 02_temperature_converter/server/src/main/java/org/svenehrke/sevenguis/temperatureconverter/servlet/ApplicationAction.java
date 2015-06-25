@@ -15,16 +15,13 @@ public class ApplicationAction extends DolphinServerAction{
 
         actionRegistry.register(ApplicationConstants.COMMAND_INIT, (command, response) -> {
 			// Create PM:
-			DTO dto = new DTO( new Slot(ATT_CELSIUS, null), new Slot(ATT_FAHRENHEIT, null), new Slot(ATT_DIRECTION, VAL_DIRECTION_CELSIUS_TO_FAHRENHEIT) );
+			DTO dto = new DTO(new Slot(ATT_CELSIUS, null), new Slot(ATT_FAHRENHEIT, null), new Slot(ATT_DIRECTION, VAL_DIRECTION_CELSIUS_TO_FAHRENHEIT));
 			getServerDolphin().presentationModel(PM_APP, null, dto);
 
 			ServerPresentationModel pm = getServerDolphin().getAt(PM_APP);
 			// Not supported: Binder.bind(ATT_CELSIUS).of(pm).using(value -> "xx").to(ATT_FAHRENHEIT).of(pm);
 			// PropertyChangeListener as workaround:
-			pm.getAt(ATT_CELSIUS).addPropertyChangeListener(evt -> {
-				if ( ! (evt.getNewValue() instanceof String)) {
-					return;
-				}
+			pm.getAt(ATT_CELSIUS).addPropertyChangeListener("value", evt -> {
 				if (VAL_DIRECTION_FAHRENHEIT_TO_CELSIUS.equals(pm.getAt(ATT_DIRECTION).getValue())) {
 					return;
 				}
@@ -39,10 +36,7 @@ public class ApplicationAction extends DolphinServerAction{
 					// invalid celsius string
 				}
 			});
-			pm.getAt(ATT_FAHRENHEIT).addPropertyChangeListener(evt -> {
-				if ( ! (evt.getNewValue() instanceof String)) {
-					return;
-				}
+			pm.getAt(ATT_FAHRENHEIT).addPropertyChangeListener("value", evt -> {
 				if (VAL_DIRECTION_CELSIUS_TO_FAHRENHEIT.equals(pm.getAt(ATT_DIRECTION).getValue())) {
 					return;
 				}

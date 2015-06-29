@@ -47,87 +47,40 @@ When the initialization process is split we know for sure after the first phase 
 This means in the second phase (INIT_DATA) we can perform data initialization on the server side and it will behave exactly the same as if the user was causing the data changes.
 And this makes it much easier to think about the application's data change flow.
 
+The OnFinishedHandler for CREATE_PMS is `MainViewInitializer.initializeBinding`.
+Apart from using some helper classes for the widget binding it does not contain any new interesting things.
+It simply contains the client side widget binding code.
 
-In the start routine of the JavaFX Application *setupStage* is called which creates all the widgets for the GUI.
-No widgets are not populated with meaningful data yet.
+The OnFinishedHandler for INIT_DATA is `MainViewInitializer.handleDataInitializedEvent`.
+TODO: check why code needs to do anything where and why existing binding is not sufficient.
 
-Then *initializePMs* is called which sends the *INIT* command to the server.
-As in the _counter_ example *setupBinding* is called in it's _OnFinishedHandler_ without using the passed presentation models.
+// -------------------------------------------------
 
-At the point in time it is clear that all the PMs exist on the serverside and on the clientside.
-This means the widgets and the presentation modesls can be safely bound to each other.
 
-In *setupBinding*
+On the *serverside* the CREATE_PMS command creates the PM by calling _PMCreator.createPMs()_ and _PMBinder.initializePMBinding()_:
 
-.setupBinding()
+[source,java]
+.PMCreator.initializePMBinding()
 ----
-PresentationModel pm = clientDolphin.getAt(PM_APP);
+public static void initializePMBinding(ServerDolphin serverDolphin, DomainLogic domainLogic) {
 
-JFXBinder.bind("text").of(celsiusTextField).to(ATT_CELSIUS).of(pm);
-JFXBinder.bind(ATT_CELSIUS).of(pm).to("text").of(celsiusTextField);
+  ServerPresentationModel pm = serverDolphin.getAt(PM_APP);
+  bindAttributeTo(pm.getAt(ATT_START_DATE), domainLogic::isDateStringValid, pm.getAt(ATT_START_DATE, VALID_TAG));
+  bindAttributeTo(pm.getAt(ATT_RETURN_DATE), domainLogic::isDateStringValid, pm.getAt(ATT_RETURN_DATE, VALID_TAG));
 
-JFXBinder.bind("text").of(fahrenheitTextField).to(ATT_FAHRENHEIT).of(pm);
-JFXBinder.bind(ATT_FAHRENHEIT).of(pm).to("text").of(fahrenheitTextField);
+  // Handle change: flightType -> isReturnFlight:
+  pm.getAt(ATT_FLIGHT_TYPE).addPropertyChangeListener(PROP_VALUE, evt -> {
+    pm.getAt(ATT_RETURN_DATE, Tag.ENABLED).setValue(domainLogic.isReturnFlight(stringValue(pm.getAt(ATT_FLIGHT_TYPE))));
+  });
 
-
-celsiusTextField.focusedProperty().addListener((s,o,gained) -> {
-  System.out.println("celsiusTextField.focusedProperty: gained: " + gained);
-  if (gained) {
-    pm.getAt(ATT_DIRECTION).setValue(VAL_DIRECTION_CELSIUS_TO_FAHRENHEIT);
-  }
-});
-
-fahrenheitTextField.focusedProperty().addListener((s,o,gained) -> {
-  System.out.println("fahrenheitTextField.focusedProperty: gained: " + gained);
-  if (gained) {
-    pm.getAt(ATT_DIRECTION).setValue(VAL_DIRECTION_FAHRENHEIT_TO_CELSIUS);
-  }
-});
-----
-
-As expected the textfields for _celsius_ and _fahrenheit_ are bound to the appropriate Attributes.
-More insteresting is the Attribute *ATT_DIRECTION* which is an indicator for client and server in which
-direction the conversion should go.
-It is set appropriately when either the _celsius_ or the _fahrenheit_ textfield get the focus.
-We will see later how the serverside makes use of it.
-
-These are the important points about the clientside.
-As you can see it is really not much code.
-So let's have a look at the serverside.
-
-
-On the serverside the INIT command creates a PM holding the attributes:
-
-* ATT_CELSIUS
-* ATT_FAHRENHEIT
-* ATT_DIRECTION with a value initialized to VAL_DIRECTION_CELSIUS_TO_FAHRENHEIT
-
-In addition PropertyChangelisteners are registered on ATT_CELSIUS and ATT_FAHRENHEIT.
-Here is the one for ATT_CELSIUS:
-
-----
-pm.getAt(ATT_CELSIUS).addPropertyChangeListener("value", evt -> {
-  if (VAL_DIRECTION_FAHRENHEIT_TO_CELSIUS.equals(pm.getAt(ATT_DIRECTION).getValue())) { // <1>
-    return;
-  }
-  String newValue = (String) evt.getNewValue();
-  Double c = null;
-  try {
-    c = Double.valueOf(newValue);
-    Double f = TemperatureConverter.fahrenheitFromCelsius(c);
-    String sf = String.valueOf(f);
-    pm.getAt(ATT_FAHRENHEIT).setValue(sf); // <2>
-  } catch (NumberFormatException e) {
-    // invalid celsius string
-  }
-});
+  // Handle change: flightType | startDate | returnDate => BookCommandEnabled
+  Arrays.asList(
+    pm.getAt(ATT_FLIGHT_TYPE), pm.getAt(ATT_START_DATE), pm.getAt(ATT_RETURN_DATE)
+  ).forEach(attr -> attr.addPropertyChangeListener(PROP_VALUE, evt -> evaluateBookCommandEnabled(pm, domainLogic)));
+}
 ----
 
 
-<1> If ATT_DIRECTION is not in the expected mode we do nothing. This mechanism prevents endless cyclic updates between the two filds due to rounding errors.
-<2> After having applied the the temperature conversion ATT_FAHRENHEIT is updated accordingly.
-
-The PropertyCChangeListener for ATT_FAHRENHEIT looks almost the same.
 
 Note that all this is done on the serverside and the code only deals with the PMs on the serverside.
 The code is completly independent from any GUI technology.
@@ -146,3 +99,6 @@ and is done.
 
 In the next blog post we will look at the *Flight Booker*.
 
+== TODO
+
+* describe okAttribute

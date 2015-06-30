@@ -93,7 +93,7 @@ public static void initializePMBinding(ServerDolphin serverDolphin, DomainLogic 
   bindAttributeTo(pm.getAt(ATT_RETURN_DATE), domainLogic::isDateStringValid, pm.getAt(ATT_RETURN_DATE, VALID_TAG));
 
   // Handle change: flightType -> isReturnFlight:
-  pm.getAt(ATT_FLIGHT_TYPE).addPropertyChangeListener(PROP_VALUE, evt -> {
+  pm.getAt(ATT_FLIGHT_TYPE).addPropertyChangeListener(PROP_VALUE, evt -> { // <2>
     pm.getAt(ATT_RETURN_DATE, Tag.ENABLED).setValue(domainLogic.isReturnFlight(stringValue(pm.getAt(ATT_FLIGHT_TYPE))));
   });
 
@@ -104,10 +104,39 @@ public static void initializePMBinding(ServerDolphin serverDolphin, DomainLogic 
 }
 ----
 
-// -------------------------------------------------
 <1> Whenever START_DATE changes check if it is a valid date string and set the result on START_DATE/VALID_TAG. START_DATE/VALID_TAG
 then can be used in the GUI binding code for the red background of the textfield.
 
+<2> For attribute to attribute binding I usually use *PropertyChangeListener*s.
+One could think of a DSL layer above them for easier usage but that does not exist yet.
+
+Now let us look at the OnFinishedHandler for INIT_DATA:
+
+[source,java]
+.PMBinder.initializePMBinding
+----
+ClientPresentationModel pm = clientDolphin.getAt(PM_APP);
+ComboBox<Pair<String, String>> cb = mainView.flightTypeComboBox;
+
+// todo: initialize the supported values on the serverside:
+cb.getItems().addAll(FXCollections.observableArrayList(new Pair<>(ApplicationConstants.VAL_FT_ONE_WAY, "one-way-flight"), new Pair<>(ApplicationConstants.VAL_FT_RETURN, "return flight"))); // <1>
+
+ODComboBoxes.populateFromAttribute(cb, pm.getAt(ATT_FLIGHT_TYPE));
+
+ODTextFields.populateFromAttribute(mainView.startDateTextField, pm.getAt(ATT_START_DATE)); // <2>
+ODTextFields.populateFromAttribute(mainView.returnDateTextField, pm.getAt(ATT_RETURN_DATE));
+
+----
+<1> As you can see the possible values for the _flightTypeComboBox_ are defined on the client side at the moment.
+This should clearly happen on the serverside so that it is done once for all possible client applications.
+
+<2> You might wonder why the text field for START_DATE (and RETURN_DATA) is populated here on the clientside.
+The reasoon is that a two-way binding for these widgets is not necessary and only at initialization time
+the data flows from attribute to widget. Afterwards the data always flows from widget to attribute.
+That's also the reason why _MainViewInitializer.initializeBinding()_ is setting up a one-way binding from widget to attribute.
+You could of course use a two way binding but I thought it would be interesting to show the one-way binding here.
+
+// -------------------------------------------------
 
 Note that all this is done on the serverside and the code only deals with the PMs on the serverside.
 The code is completly independent from any GUI technology.

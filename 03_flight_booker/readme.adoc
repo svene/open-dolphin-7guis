@@ -54,10 +54,34 @@ It simply contains the client side widget binding code.
 The OnFinishedHandler for INIT_DATA is `MainViewInitializer.handleDataInitializedEvent`.
 TODO: check why code needs to do anything where and why existing binding is not sufficient.
 
-// -------------------------------------------------
-
 
 On the *serverside* the CREATE_PMS command creates the PM by calling _PMCreator.createPMs()_ and _PMBinder.initializePMBinding()_:
+
+[source,java]
+.PMCreator.createPMs()
+----
+public static void createPMs(ServerDolphin serverDolphin) {
+  // Create PM:
+  DTO dto = new DTO(
+    new Slot(ATT_FLIGHT_TYPE, null),
+    new Slot(ATT_START_DATE, null ),
+    new Slot(ATT_START_DATE, null, null, VALID_TAG),
+    new Slot(ATT_RETURN_DATE, null),
+    new Slot(ATT_RETURN_DATE, null, null, VALID_TAG),
+    new Slot(ATT_RETURN_DATE, null, null, Tag.ENABLED),
+    new Slot(ATT_MESSAGE, null),
+    new Slot(ATT_BOOK_COMMAND_ENABLED, null)
+  );
+  serverDolphin.presentationModel(PM_APP, null, dto);
+}
+----
+
+One requirement is that TextFields need to indicate with a red background when their content is wrong.
+To support this the attribute START_DATE carries the tag VALID_TAG.
+
+Another requirement is that the textfield for the return date is only enabled when _return flight_ is selected from the dropdown widget.
+Therefore the attribute RETURN_DATE carries the tag ENABLED.
+
 
 [source,java]
 .PMCreator.initializePMBinding()
@@ -65,7 +89,7 @@ On the *serverside* the CREATE_PMS command creates the PM by calling _PMCreator.
 public static void initializePMBinding(ServerDolphin serverDolphin, DomainLogic domainLogic) {
 
   ServerPresentationModel pm = serverDolphin.getAt(PM_APP);
-  bindAttributeTo(pm.getAt(ATT_START_DATE), domainLogic::isDateStringValid, pm.getAt(ATT_START_DATE, VALID_TAG));
+  bindAttributeTo(pm.getAt(ATT_START_DATE), domainLogic::isDateStringValid, pm.getAt(ATT_START_DATE, VALID_TAG)); // <1>
   bindAttributeTo(pm.getAt(ATT_RETURN_DATE), domainLogic::isDateStringValid, pm.getAt(ATT_RETURN_DATE, VALID_TAG));
 
   // Handle change: flightType -> isReturnFlight:
@@ -80,6 +104,9 @@ public static void initializePMBinding(ServerDolphin serverDolphin, DomainLogic 
 }
 ----
 
+// -------------------------------------------------
+<1> Whenever START_DATE changes check if it is a valid date string and set the result on START_DATE/VALID_TAG. START_DATE/VALID_TAG
+then can be used in the GUI binding code for the red background of the textfield.
 
 
 Note that all this is done on the serverside and the code only deals with the PMs on the serverside.

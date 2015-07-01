@@ -118,20 +118,16 @@ Now let us look at the OnFinishedHandler for INIT_DATA:
 ClientPresentationModel pm = clientDolphin.getAt(PM_APP);
 ComboBox<Pair<String, String>> cb = mainView.flightTypeComboBox;
 
-// todo: initialize the supported values on the serverside:
-cb.getItems().addAll(FXCollections.observableArrayList(new Pair<>(ApplicationConstants.VAL_FT_ONE_WAY, "one-way-flight"), new Pair<>(ApplicationConstants.VAL_FT_RETURN, "return flight"))); // #<1>
+cb.getItems().addAll(FXCollections.observableArrayList(pairlistFromString(SharedDolphinFunctions.stringValue(pm.getAt(ATT_FLIGHT_TYPES)))));
 
 ODComboBoxes.populateFromAttribute(cb, pm.getAt(ATT_FLIGHT_TYPE));
 
-ODTextFields.populateFromAttribute(mainView.startDateTextField, pm.getAt(ATT_START_DATE)); // #<2>
+ODTextFields.populateFromAttribute(mainView.startDateTextField, pm.getAt(ATT_START_DATE)); // #<1>
 ODTextFields.populateFromAttribute(mainView.returnDateTextField, pm.getAt(ATT_RETURN_DATE));
 
 ----
 
-<1> As you can see the possible values for the _flightTypeComboBox_ are defined on the client side at the moment.
-This should clearly happen on the serverside so that it is done once for all possible client applications.
-
-<2> Population of text field for START_DATE
+<1> Population of text field for START_DATE
 
 You might wonder why the text field for START_DATE (and RETURN_DATA) is populated here on the clientside ([conum,data-value=1]_1_, [conum,data-value=2]_2_).
 The reason is that a two-way binding for these widgets is not necessary and only at initialization time the data flows from attribute to widget. Afterwards the data always flows from widget to attribute.

@@ -13,6 +13,7 @@ public class PMCreator {
 		// Create PM:
 		DTO dto = new DTO(
 			new Slot(ATT_FLIGHT_TYPE, null),
+			new Slot(ATT_FLIGHT_TYPES, null),
 			new Slot(ATT_START_DATE, null ),
 			new Slot(ATT_START_DATE, null, null, VALID_TAG),
 			new Slot(ATT_RETURN_DATE, null),

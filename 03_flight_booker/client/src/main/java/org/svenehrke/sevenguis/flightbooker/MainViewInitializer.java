@@ -7,6 +7,10 @@ import org.opendolphin.core.Tag;
 import org.opendolphin.core.client.ClientDolphin;
 import org.opendolphin.core.client.ClientPresentationModel;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.svenehrke.sevenguis.flightbooker.ApplicationConstants.*;
 
 public class MainViewInitializer {
@@ -57,11 +61,15 @@ public class MainViewInitializer {
 
 		ComboBox<Pair<String, String>> cb = mainView.flightTypeComboBox;
 
-		// todo (Sven 13.03.15): initialize the supported values on the serverside:
-		cb.getItems().addAll(FXCollections.observableArrayList(new Pair<>(ApplicationConstants.VAL_FT_ONE_WAY, "one-way-flight"), new Pair<>(ApplicationConstants.VAL_FT_RETURN, "return flight")));
+		List<Pair<String, String>> pairs = pairlistFromString(SharedDolphinFunctions.stringValue(pm.getAt(ATT_FLIGHT_TYPES)));
+		cb.getItems().addAll(FXCollections.observableArrayList(pairs));
 		ODComboBoxes.populateFromAttribute(cb, pm.getAt(ATT_FLIGHT_TYPE));
 
 		ODTextFields.populateFromAttribute(mainView.startDateTextField, pm.getAt(ATT_START_DATE));
 		ODTextFields.populateFromAttribute(mainView.returnDateTextField, pm.getAt(ATT_RETURN_DATE));
+	}
+
+	private List<Pair<String, String>> pairlistFromString(String mapString) { // mapString format: key1:value1,key2,value2...
+		return Arrays.asList(mapString.split(",")).stream().map(s -> new Pair<>(s.split(":")[0], s.split(":")[1])).collect(Collectors.toList());
 	}
 }

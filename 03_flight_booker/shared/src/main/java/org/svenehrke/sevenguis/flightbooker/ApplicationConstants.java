@@ -12,6 +12,7 @@ public class ApplicationConstants {
 
     public static final String PM_APP = unique("APP");
     public static final String ATT_FLIGHT_TYPE = "ATT_FLIGHT_TYPE";
+    public static final String ATT_FLIGHT_TYPES = "ATT_FLIGHT_TYPES";
     public static final String VAL_FT_ONE_WAY = "o";
     public static final String VAL_FT_RETURN = "r";
 

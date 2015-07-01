@@ -61,8 +61,7 @@ public class MainViewInitializer {
 
 		ComboBox<Pair<String, String>> cb = mainView.flightTypeComboBox;
 
-		List<Pair<String, String>> pairs = pairlistFromString(SharedDolphinFunctions.stringValue(pm.getAt(ATT_FLIGHT_TYPES)));
-		cb.getItems().addAll(FXCollections.observableArrayList(pairs));
+		cb.getItems().addAll(FXCollections.observableArrayList(pairlistFromString(SharedDolphinFunctions.stringValue(pm.getAt(ATT_FLIGHT_TYPES)))));
 		ODComboBoxes.populateFromAttribute(cb, pm.getAt(ATT_FLIGHT_TYPE));
 
 		ODTextFields.populateFromAttribute(mainView.startDateTextField, pm.getAt(ATT_START_DATE));

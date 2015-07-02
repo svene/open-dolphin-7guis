@@ -143,7 +143,6 @@ The keypoint in this example is:
 * Two-phase initialization: first create PMs and the bindings between them and second initialze the PMs with data on the serverside after the client finished the widget-PM binding.
 * One-way bindings (START_DATE) and no-bindings (flighttypes combobox) are often sufficient.
 
+Next we will look at the CRUD example but that is not done yet.
 
-== TODO
 
-* describe okAttribute

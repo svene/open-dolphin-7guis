@@ -1,7 +1,7 @@
 = 7 GUIs with OpenDolpin
 
 Dierk König discovered https://github.com/eugenkiss/7guis/wiki[7 GUIs: A Notational Usability Benchmark for GUI Programming]
-and we thought it would be a great to have an OpenDolphin implementation of it.
+and we thought it would be great to have an OpenDolphin implementation of it.
 
 For me not necessarily the notational usability aspect is important but to find a good OpenDolphin implementation.
 
@@ -14,10 +14,15 @@ Since I want to focus on the ones which are more insteresting from an OpenDolphi
 For the client technology I decided to use JavaFX in a simple programmatic way and
 I will try to find the time to do a HTML GUI in the future.
 
-When you go through these blog post I recommend that you look at the original description of
-https://github.com/eugenkiss/7guis/wiki[7 GUIs: A Notational Usability Benchmark for GUI Programming]
-because I will not repeat it's description here.
+Since github supports Asciidoctor I decided to use that format for the descriptions of the individual examples,
+which brings back the fun in writing and the documentation close to the code.
+
+
+When you go through the descriptions I recommend that you look at the original description of
+https://github.com/eugenkiss/7guis/wiki[7 GUIs: A Notational Usability Benchmark for GUI Programming].
 
 Here is the list of the currently implemented GUIs:
 
 . link:01_counter/readme.adoc[Counter]
+. link:02_temperature_converter/readme.adoc[Temperature Converter]
+. link:03_flight_booker/readme.adoc[Flight Booker]
